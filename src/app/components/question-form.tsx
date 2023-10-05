@@ -50,6 +50,9 @@ export function QuestionForm() {
           </button>
         </div>
       </div>
+      <p className="mt-2 text-center text-gray-500 text-sm">
+        ChatGPT clone built with Next.js and Vercel AI SDK.
+      </p>
     </form>
   )
 }
