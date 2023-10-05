@@ -15,11 +15,10 @@ export function QuestionForm() {
   }
 
   function handleTextAreaChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setQuestion(e.target.value)
-    // Count the number of newline characters to determine the rows
-    const newlineCount = (e.target.value.match(/\n/g) || []).length + 1;
-    // Ensure the number of rows doesn't exceed 4
-    setNumRows(Math.min(newlineCount, 5));
+    const { value } = e.target
+    const newRows = value.split('\n').length
+    setNumRows(Math.min(newRows, 5));
+    setQuestion(value)
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -31,16 +30,16 @@ export function QuestionForm() {
 
   return (
     <form className="w-full">
-      <div className="py-2 px-4 flex gap-2 rounded-lg shadow-[0_0px_20px_rgba(0,0,0,0.2)]">
+      <div className="p-2 flex gap-2 rounded-lg shadow-[0_0px_20px_rgba(0,0,0,0.2)]">
         <textarea 
           rows={numRows} 
-          className="grow p-2 border-0 outline-none scroll-m-10"
+          className="grow p-1 border-0 outline-none"
           placeholder="Send a message"
           value={question}
           onChange={handleTextAreaChange}
           onKeyDown={handleKeyDown}
         />
-        <div className="pb-1 flex flex-col-reverse">
+        <div className="mb-1 flex flex-col-reverse">
           <button
             className="text-indigo-600 hover:text-indigo-500"
             onClick={e => {
