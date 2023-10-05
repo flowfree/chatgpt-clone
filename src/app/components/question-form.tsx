@@ -6,12 +6,11 @@ export function QuestionForm() {
   const [question, setQuestion] = useState('')
 
   function handleSubmit() {
-    if (!question) {
-      return
+    if (question) {
+      console.log(`Question: ${question}`)
+      setQuestion('')
+      setNumRows(1)
     }
-    console.log(`Question: ${question}`)
-    setQuestion('')
-    setNumRows(1)
   }
 
   function handleTextAreaChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -30,10 +29,10 @@ export function QuestionForm() {
 
   return (
     <form className="w-full">
-      <div className="p-2 flex gap-2 rounded-lg shadow-[0_0px_20px_rgba(0,0,0,0.2)]">
+      <div className="p-4 pb-3 flex gap-2 rounded-lg shadow-[0_0px_30px_rgba(0,0,0,0.2)]">
         <textarea 
           rows={numRows} 
-          className="grow p-1 border-0 outline-none"
+          className="grow border-0 outline-none resize-none"
           placeholder="Send a message"
           value={question}
           onChange={handleTextAreaChange}
