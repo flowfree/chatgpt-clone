@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid'
 
-export function QuestionForm() {
+export function QuestionForm({
+  onSubmit
+}: {
+  onSubmit: (question: string) => void
+}) {
   const [numRows, setNumRows] = useState(1)
   const [question, setQuestion] = useState('')
 
   function handleSubmit() {
     if (question) {
-      console.log(`Question: ${question}`)
+      onSubmit(question)
       setQuestion('')
       setNumRows(1)
     }

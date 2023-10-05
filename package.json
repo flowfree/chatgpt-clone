@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
+    "ai": "^2.2.14",
     "next": "13.5.4",
+    "openai": "^4.11.1",
     "react": "^18",
     "react-dom": "^18"
   },
