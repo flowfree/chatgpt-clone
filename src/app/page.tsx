@@ -2,20 +2,13 @@
 
 import { useState } from 'react'
 import { QuestionForm } from '@/app/components'
-
-interface Message {
-  role: 'system' | 'assistant' | 'user'
-  content: string
-}
+import { ChatMessages, type Message } from '@/app/components'
 
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([])
 
   async function handleSubmit(question: string) {
-    const newMessages: Message[] = [
-      ...messages, 
-      { role: 'user', content: question }
-    ]
+    const newMessages: Message[] = [...messages, { role: 'user', content: question }]
     setMessages(newMessages)
 
     const response = await fetch('/api/chat', { 
@@ -29,10 +22,7 @@ export default function Page() {
       throw new Error('Stream is null')
     }
 
-    setMessages(messages => ([
-      ...messages,
-      { role: 'assistant', content: '...' }
-    ]))
+    setMessages(messages => ([...messages, { role: 'assistant', content: '...' }]))
 
     const reader = stream.getReader()
     const textDecoder = new TextDecoder('utf-8')
@@ -57,14 +47,8 @@ export default function Page() {
 
   return (
     <div className="fixed w-full bottom-0 left-0">
-      <ul>
-        {messages.map((message, index) => (
-          <li key={index}>
-            {message.content}
-          </li>
-        ))}
-      </ul>
       <div className="max-w-3xl mx-auto mb-8">
+        <ChatMessages messages={messages} />
         <QuestionForm onSubmit={handleSubmit} />
       </div>
     </div>
