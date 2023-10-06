@@ -11,6 +11,10 @@ export default function Page() {
     const newMessages: Message[] = [...messages, { role: 'user', content: question }]
     setMessages(newMessages)
 
+    // Immediately scroll to the bottom of the page
+    document.documentElement.scrollTop = document.documentElement.scrollHeight;
+    document.body.scrollTop = document.body.scrollHeight;
+
     const response = await fetch('/api/chat', { 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -37,6 +41,10 @@ export default function Page() {
           ...messages.slice(0, -1),
           { role: 'assistant', content }
         ]))
+
+        // Always scroll to the bottom of the page
+        document.documentElement.scrollTop = document.documentElement.scrollHeight;
+        document.body.scrollTop = document.body.scrollHeight;
       }
     } catch (error) {
       console.error(`Error reading from stream: ${error}`)
@@ -46,10 +54,19 @@ export default function Page() {
   }
 
   return (
-    <div className="fixed w-full bottom-0 left-0">
-      <div className="max-w-3xl mx-auto mb-8">
-        <ChatMessages messages={messages} />
-        <QuestionForm onSubmit={handleSubmit} />
+    <div>
+      <div className="w-full">
+        <div className="max-w-3xl mx-auto mb-36">
+          <ChatMessages messages={messages} />
+        </div>
+      </div>
+      <div className="fixed w-full bottom-0 left-0">
+        <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
+        <div className="w-full bg-white">
+          <div className="max-w-3xl mx-auto pt-2 pb-4">
+            <QuestionForm onSubmit={handleSubmit} />
+          </div>
+        </div>
       </div>
     </div>
   )
