@@ -4,6 +4,53 @@ import { useState } from 'react'
 import { QuestionForm } from '@/app/components'
 import { ChatMessages, type Message } from '@/app/components'
 
+const content1 = `Sure, here's a Python code snippet to display the Fibonacci sequence:
+
+~~~python
+def fibonacci(n):
+    fib_sequence = [0, 1]
+    
+    while len(fib_sequence) < n:
+        next_num = fib_sequence[-1] + fib_sequence[-2]
+        fib_sequence.append(next_num)
+    
+    return fib_sequence
+
+n = int(input("Enter the number of Fibonacci numbers to generate: "))
+fib_nums = fibonacci(n)
+print(fib_nums)
+~~~
+
+Just run this code, and it will display the first n Fibonacci numbers.
+`
+
+const content2 = `Here's the equivalent code in JavaScript to display the Fibonacci sequence:
+
+~~~javascript
+function fibonacci(n) {
+  const fibSequence = [0, 1];
+
+  while (fibSequence.length < n) {
+    const nextNum = fibSequence[fibSequence.length - 1] + fibSequence[fibSequence.length - 2];
+    fibSequence.push(nextNum);
+  }
+
+  return fibSequence;
+}
+
+const n = parseInt(prompt("Enter the number of Fibonacci numbers to generate:"));
+const fibNums = fibonacci(n);
+console.log(fibNums);
+~~~
+
+This JavaScript code will also generate and display the first \`n\` Fibonacci numbers when run in a web browser or a Node.js environment.`
+
+const initialMessages: Message[] = [
+  { 'role': 'assistant', content: content1 },
+]
+
+
+
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([])
 

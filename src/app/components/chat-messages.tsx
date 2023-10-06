@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { CodeBlock } from '@/app/components'
 
 export interface Message {
   role: 'system' | 'assistant' | 'user'
@@ -39,7 +39,19 @@ export function ChatMessages({
               ),
               p: ({ node, ...props }) => (
                 <p className="my-4" {...props} />
-              )
+              ),
+              code: ({ node, className, children, ...props }) => {
+                const match = /language-(\w+)/.exec(className || "");
+                return match ? (
+                  <CodeBlock language={match[1]}>
+                    {children}
+                  </CodeBlock>
+                ) : (
+                  <code {...props} className={className}>
+                    {children}
+                  </code>
+                );
+              }
             }}
           >
             {message.content}
@@ -49,3 +61,26 @@ export function ChatMessages({
     </ul>
   )
 }
+
+/*
+                const match = /language-(\w+)/.exec(className || "");
+                return match ? (
+                  <div className="bg-gray-700 rounded-md">
+                    <div className="flex gap-2 items-center h-8 px-2 text-white text-sm">
+                      <p className="grow">
+                        {match[1]}
+                      </p>
+                      <p>
+                        Copy code
+                      </p>
+                    </div>
+                    <SyntaxHighlighter 
+                      language={match[1]} 
+                      style={monokai}
+                      PreTag='div'
+                      className='text-sm rounded-bl-md rounded-br-md'
+                    >
+                      {String(children).replace(/\n$/, "")}
+                    </SyntaxHighlighter>
+                  </div>
+*/
