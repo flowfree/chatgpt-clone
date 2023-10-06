@@ -34,6 +34,7 @@ export default function Page() {
         const { value, done } = await reader.read()
         if (done) break
         content += textDecoder.decode(value)
+        console.log(content)
         setMessages(messages => ([
           ...messages.slice(0, -1),
           { role: 'assistant', content }
