@@ -10,10 +10,7 @@ export default function Page() {
   async function handleSubmit(question: string) {
     const newMessages: Message[] = [...messages, { role: 'user', content: question }]
     setMessages(newMessages)
-
-    // Immediately scroll to the bottom of the page
-    document.documentElement.scrollTop = document.documentElement.scrollHeight;
-    document.body.scrollTop = document.body.scrollHeight;
+    scrollToBottom()
 
     const response = await fetch('/api/chat', { 
       method: 'POST',
@@ -43,14 +40,18 @@ export default function Page() {
         ]))
 
         // Always scroll to the bottom of the page
-        document.documentElement.scrollTop = document.documentElement.scrollHeight;
-        document.body.scrollTop = document.body.scrollHeight;
+        scrollToBottom()
       }
     } catch (error) {
       console.error(`Error reading from stream: ${error}`)
     } finally {
       reader.releaseLock()
     }
+  }
+
+  function scrollToBottom() {
+    document.documentElement.scrollTop = document.documentElement.scrollHeight;
+    document.body.scrollTop = document.body.scrollHeight;
   }
 
   return (
