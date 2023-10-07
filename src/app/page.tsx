@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { QuestionForm } from '@/app/components'
 import { ChatMessages, type Message } from '@/app/components'
 
@@ -57,10 +57,15 @@ const initialMessages: Message[] = [
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([])
 
+  useEffect(() => {
+    // Always scroll to the bottom of the page on each message changes
+    document.documentElement.scrollTop = document.documentElement.scrollHeight;
+    document.body.scrollTop = document.body.scrollHeight;
+  }, [messages])
+
   async function handleSubmit(question: string) {
     const newMessages: Message[] = [...messages, { role: 'user', content: question }]
     setMessages(newMessages)
-    scrollToBottom()
 
     const response = await fetch('/api/chat', { 
       method: 'POST',
@@ -84,25 +89,16 @@ export default function Page() {
         const { value, done } = await reader.read()
         if (done) break
         content += textDecoder.decode(value)
-        console.log(content)
         setMessages(messages => ([
           ...messages.slice(0, -1),
           { role: 'assistant', content }
         ]))
-
-        // Always scroll to the bottom of the page
-        scrollToBottom()
       }
     } catch (error) {
       console.error(`Error reading from stream: ${error}`)
     } finally {
       reader.releaseLock()
     }
-  }
-
-  function scrollToBottom() {
-    document.documentElement.scrollTop = document.documentElement.scrollHeight;
-    document.body.scrollTop = document.body.scrollHeight;
   }
 
   return (
