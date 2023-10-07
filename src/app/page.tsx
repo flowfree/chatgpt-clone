@@ -55,7 +55,7 @@ const initialMessages: Message[] = [
 
 
 export default function Page() {
-  const [messages, setMessages] = useState<Message[]>(initialMessages)
+  const [messages, setMessages] = useState<Message[]>([])
 
   useEffect(() => {
     // Always scroll to the bottom of the page on each message changes
