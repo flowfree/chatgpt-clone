@@ -59,7 +59,7 @@ export function CodeBlock({
     <div className="bg-gray-700 rounded-md">
       <div className="flex gap-2 items-center h-8 px-2 text-white text-sm">
         <p className="grow">
-          {language}
+          {language.charAt(0).toUpperCase() + language.slice(1)}
         </p>
         {isCopied ? (
           <p>
