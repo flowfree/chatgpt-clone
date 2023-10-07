@@ -46,7 +46,10 @@ console.log(fibNums);
 This JavaScript code will also generate and display the first \`n\` Fibonacci numbers when run in a web browser or a Node.js environment.`
 
 const initialMessages: Message[] = [
+  { 'role': 'user', content: 'Write python code to display Fibonacci' },
   { 'role': 'assistant', content: content1 },
+  { 'role': 'user', content: 'Rewrite the code in Javascript' },
+  { 'role': 'assistant', content: content2 },
 ]
 
 
@@ -105,7 +108,7 @@ export default function Page() {
   return (
     <div>
       <div className="w-full">
-        <div className="max-w-3xl mx-auto mb-36">
+        <div className="mb-36">
           <ChatMessages messages={messages} />
         </div>
       </div>
