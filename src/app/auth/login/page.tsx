@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { signIn, useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 const prompts = [
@@ -14,9 +16,14 @@ const prompts = [
 ]
 
 export default function Page() {
+  const { data: session } = useSession()
   const [index, setIndex] = useState(0)
   const [heading, setHeading] = useState('')
   const [subheading, setSubheading] = useState('')
+
+  if (session) {
+    redirect('/')
+  }
 
   useEffect(() => {
     showPrompt()
@@ -58,7 +65,10 @@ export default function Page() {
               Get started
             </h2>
             <div className="px-8 w-full flex gap-2">
-              <button className="py-2 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white">
+              <button 
+                className="py-2 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white"
+                onClick={() => signIn()}
+              >
                 Sign In
               </button>
               <button className="py-2 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white">

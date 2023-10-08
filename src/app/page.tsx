@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { QuestionForm } from '@/app/components'
 import { ChatMessages, type Message } from '@/app/components'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 const content1 = `Sure, here's a Python code snippet to display the Fibonacci sequence:
 
@@ -55,7 +57,12 @@ const initialMessages: Message[] = [
 
 
 export default function Page() {
+  const { data: session } = useSession()
   const [messages, setMessages] = useState<Message[]>([])
+
+  if (!session) {
+    redirect('/auth/login')
+  }
 
   useEffect(() => {
     // Always scroll to the bottom of the page on each message changes
