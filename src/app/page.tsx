@@ -103,8 +103,8 @@ export default function Page() {
 
   return (
     <div>
-      <div className="w-full">
-        <div className="mb-36">
+      <div className="w-content">
+        <div className="pb-36">
           <ChatMessages messages={messages} />
         </div>
       </div>
