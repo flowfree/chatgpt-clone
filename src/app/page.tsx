@@ -1,128 +1,145 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { QuestionForm } from '@/app/components'
-import { ChatMessages, type Message } from '@/app/components'
-import { useSession } from 'next-auth/react'
+import { useState, useEffect } from 'react'
+import { signIn, useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
-const content1 = `Sure, here's a Python code snippet to display the Fibonacci sequence:
-
-~~~python
-def fibonacci(n):
-    fib_sequence = [0, 1]
-    
-    while len(fib_sequence) < n:
-        next_num = fib_sequence[-1] + fib_sequence[-2]
-        fib_sequence.append(next_num)
-    
-    return fib_sequence
-
-n = int(input("Enter the number of Fibonacci numbers to generate: "))
-fib_nums = fibonacci(n)
-print(fib_nums)
-~~~
-
-Just run this code, and it will display the first n Fibonacci numbers.
-`
-
-const content2 = `Here's the equivalent code in JavaScript to display the Fibonacci sequence:
-
-~~~javascript
-function fibonacci(n) {
-  const fibSequence = [0, 1];
-
-  while (fibSequence.length < n) {
-    const nextNum = fibSequence[fibSequence.length - 1] + fibSequence[fibSequence.length - 2];
-    fibSequence.push(nextNum);
-  }
-
-  return fibSequence;
-}
-
-const n = parseInt(prompt("Enter the number of Fibonacci numbers to generate:"));
-const fibNums = fibonacci(n);
-console.log(fibNums);
-~~~
-
-This JavaScript code will also generate and display the first \`n\` Fibonacci numbers when run in a web browser or a Node.js environment.`
-
-const initialMessages: Message[] = [
-  { 'role': 'user', content: 'Write python code to display Fibonacci' },
-  { 'role': 'assistant', content: content1 },
-  { 'role': 'user', content: 'Rewrite the code in Javascript' },
-  { 'role': 'assistant', content: content2 },
+const prompts = [
+  'Plan a trip - to see the northern lights in Norway',
+  'Suggest fun activities - for a team-building day with remote employees',
+  'Draft an email - requesting a deadline extension for my project',
+  'Help me debug - a Python script automating daily reports',
+  'Help me debug - Why the linked list appears empty after I\'ve reversed it',
+  'Summarize this article - into three keypoints',
+  'Summarize this article - as a table of pros and cons',
 ]
-
-
 
 export default function Page() {
   const { data: session } = useSession()
-  const [messages, setMessages] = useState<Message[]>([])
+  const [index, setIndex] = useState(0)
+  const [heading, setHeading] = useState('')
+  const [subheading, setSubheading] = useState('')
 
-  if (!session) {
-    redirect('/auth/login')
+  if (session) {
+    redirect('/chat')
   }
 
   useEffect(() => {
-    // Always scroll to the bottom of the page on each message changes
-    document.documentElement.scrollTop = document.documentElement.scrollHeight;
-    document.body.scrollTop = document.body.scrollHeight;
-  }, [messages])
+    showPrompt()
+    const timer = setTimeout(() => {
+      setIndex(i => i+1 < prompts.length ? i+1 : 0)
+    }, 5000)
 
-  async function handleSubmit(question: string) {
-    const newMessages: Message[] = [...messages, { role: 'user', content: question }]
-    setMessages(newMessages)
+    return () => clearTimeout(timer)
+  }, [index])
 
-    const response = await fetch('/api/chat', { 
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: newMessages })
-    })
-
-    const stream = response.body
-    if (stream === null) {
-      throw new Error('Stream is null')
-    }
-
-    setMessages(messages => ([...messages, { role: 'assistant', content: '...' }]))
-
-    const reader = stream.getReader()
-    const textDecoder = new TextDecoder('utf-8')
-    let content = ''
-
-    try {
-      while (true) {
-        const { value, done } = await reader.read()
-        if (done) break
-        content += textDecoder.decode(value)
-        setMessages(messages => ([
-          ...messages.slice(0, -1),
-          { role: 'assistant', content }
-        ]))
-      }
-    } catch (error) {
-      console.error(`Error reading from stream: ${error}`)
-    } finally {
-      reader.releaseLock()
-    }
+  function showPrompt() {
+    let prompt = prompts[index]
+    const [h, s] = prompt.split(' - ')
+    setHeading(h)
+    setSubheading(s)
   }
 
   return (
-    <div>
-      <div className="w-content">
-        <div className="pb-36">
-          <ChatMessages messages={messages} />
-        </div>
-      </div>
-      <div className="fixed w-full bottom-0 left-0">
-        <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
-        <div className="w-full bg-white">
-          <div className="max-w-3xl mx-auto pt-2 pb-4">
-            <QuestionForm onSubmit={handleSubmit} />
+    <div className="w-full min-h-full flex flex-row">
+      <div className="py-4 px-8 basis-2/3 bg-gray-100 flex flex-col">
+        <h2 className="text-lg font-bold tracking-tight">
+          ChatGPT clone
+        </h2>
+        <div className="grow flex items-center">
+          <div>
+            <h2 className="text-5xl font-bold tracking-tight">
+              {heading}
+            </h2>
+            <p className="mt-2 text-2xl tracking-tight text-gray-800 h-16">
+              <Typewriter text={subheading} />
+            </p>
           </div>
         </div>
       </div>
+      <div className="py-8 basis-1/3 flex flex-col">
+        <div className="grow flex items-center justify-center">
+          <div className="w-full flex flex-col items-center gap-4">
+            <h2 className="text-3xl font-bold tracking-tight">
+              Get started
+            </h2>
+            <div className="px-8 w-full flex gap-2">
+              <button 
+                className="py-2 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white"
+                onClick={() => signIn()}
+              >
+                Sign In
+              </button>
+              <button className="py-2 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white">
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-center text-sm text-gray-700">
+          <p>
+            ChatGPT clone built with Next.js and Vercel AI SDK.
+          </p>
+          <ul className="mt-2 flex gap-4">
+            <li>
+              <Link href="/terms-of-use" className="text-blue-700 hover:underline">
+                Terms of use
+              </Link>
+            </li>
+            <li>|</li>
+            <li>
+              <Link href="/privacy-policy" className="text-blue-700 hover:underline">
+                Privacy policy
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
+  )
+}
+
+function Typewriter({ text }: { text: string }) {
+  const [displayText, setDisplayText] = useState('')
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [blinkingCursor, setBlinkingCursor] = useState(false)
+  const [showCursor, setShowCursor] = useState(false)
+
+  useEffect(() => {
+    setDisplayText('')
+    setCurrentIndex(0)
+  }, [text])
+
+  useEffect(() => {
+    setShowCursor(true)
+    const timer = setTimeout(() => {
+      if (currentIndex < text.length) {
+        setDisplayText((prevText) => prevText + text[currentIndex])
+        setCurrentIndex((prevIndex) => prevIndex + 1)
+      } else {
+        setBlinkingCursor(true)
+        clearTimeout(timer)
+      }
+    }, 50)
+
+    return () => clearTimeout(timer)
+  }, [currentIndex, text])
+
+  useEffect(() => {
+    if (showCursor && blinkingCursor) {
+      const timer = setInterval(() => {
+        setShowCursor(c => !c)
+      }, 500)
+      
+      return () => clearInterval(timer)
+    }
+  }, [blinkingCursor])
+
+  return (
+    <span>
+      {displayText}
+      {showCursor && <span>{` _`}</span>}
+    </span>  
   )
 }
