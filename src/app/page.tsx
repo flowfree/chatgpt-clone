@@ -29,16 +29,11 @@ export default function Page() {
     let prompt = prompts[index]
     const [text1, text2] = prompt.split(' - ')
     setHeading(text1)
-    setSubheading('')
+    setSubheading(text2)
 
-    let timer: NodeJS.Timeout
-
-    setTimeout(() => {
-      setSubheading(text2)
-      timer = setTimeout(() => {
-        setIndex(i => i+1 < prompts.length ? i+1 : 0)
-      }, 5000)
-    }, 1000)
+    const timer = setTimeout(() => {
+      setIndex(i => i+1 < prompts.length ? i+1 : 0)
+    }, 5000)
 
     return () => clearTimeout(timer)
   }, [index])
@@ -83,7 +78,7 @@ export default function Page() {
           </div>
         </div>
         <div className="flex flex-col items-center text-sm text-gray-700">
-          <p>
+          <p className="text-center">
             ChatGPT clone built with Next.js and Vercel AI SDK.
           </p>
           <ul className="mt-2 flex gap-4">
@@ -105,31 +100,48 @@ export default function Page() {
   )
 }
 
-function Typewriter({ text }: { text: string }) {
+function Typewriter({ 
+  text, 
+  speed = 50,
+  initialDelay = 1000
+}: { 
+  text: string, 
+  speed?: number
+  initialDelay?: number
+}) {
   const [displayText, setDisplayText] = useState('')
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null)
   const [blinkingCursor, setBlinkingCursor] = useState(false)
   const [showCursor, setShowCursor] = useState(false)
 
   useEffect(() => {
     setDisplayText('')
-    setCurrentIndex(0)
+    const timer = setTimeout(() => {
+      setCurrentIndex(0)
+    }, initialDelay)
+
+    return () => clearTimeout(timer)
   }, [text])
 
   useEffect(() => {
     setShowCursor(true)
+
+    if (currentIndex === null) {
+      return
+    }
+
     const timer = setTimeout(() => {
       if (currentIndex < text.length) {
         setDisplayText((prevText) => prevText + text[currentIndex])
-        setCurrentIndex((prevIndex) => prevIndex + 1)
+        setCurrentIndex((prevIndex) => prevIndex === null ? prevIndex : prevIndex+1)
       } else {
         setBlinkingCursor(true)
         clearTimeout(timer)
       }
-    }, 50)
+    }, speed)
 
     return () => clearTimeout(timer)
-  }, [currentIndex, text])
+  }, [currentIndex])
 
   useEffect(() => {
     if (showCursor && blinkingCursor) {

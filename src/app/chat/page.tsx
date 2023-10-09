@@ -120,7 +120,7 @@ export default function Page() {
         <ul>
           {messages.map(({ role, content }, index) => (
             <li key={index} className={`py-2 ` + (role === 'assistant' ? 'bg-gray-50 border-y border-y-gray-200/75' : '')}>
-              <div className="max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex gap-4 ">
+              <div className="max-w-sm px-2 text-sm sm:px-0 sm:text-base sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex gap-4 ">
                 <div className="lg:min-w-fit">
                   {role === 'user' ? (
                     <img src={session?.user?.image || ''} className="mt-2 w-9 h-auto bg-green-500" alt="" />
@@ -142,7 +142,7 @@ export default function Page() {
         <div className="flex-1 lg:basis-5/6">
           <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
           <div className="w-full bg-white">
-            <div className="max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto pb-4">
+            <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto pb-4">
               <QuestionForm onSubmit={handleSubmit} />
             </div>
           </div>
