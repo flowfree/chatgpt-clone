@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { QuestionForm } from '@/app/components'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-import { Markdown } from '@/app/components'
+import { ArrowPathIcon } from '@heroicons/react/24/outline'
+import { QuestionForm } from './components/question-form'
+import { Markdown } from './components/markdown'
 
 interface Message {
   role: 'system' | 'assistant' | 'user'
@@ -63,6 +64,8 @@ const initialMessages: Message[] = [
 
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
+  const [regenerate, setRegenerate] = useState('')
+  const [isStreaming, setIsStreaming] = useState(false)
 
   const { data: session } = useSession()
   if (!session) {
@@ -73,11 +76,17 @@ export default function Page() {
     // Always scroll to the bottom of the page on each message changes
     document.documentElement.scrollTop = document.documentElement.scrollHeight;
     document.body.scrollTop = document.body.scrollHeight;
-  }, [messages])
+
+    if (regenerate) {
+      handleSubmit(regenerate)
+      setRegenerate('')
+    }
+  }, [messages, regenerate])
 
   async function handleSubmit(question: string) {
     const newMessages: Message[] = [...messages, { role: 'user', content: question }]
     setMessages(newMessages)
+    setIsStreaming(true)
 
     const response = await fetch('/api/chat', { 
       method: 'POST',
@@ -110,7 +119,16 @@ export default function Page() {
       console.error(`Error reading from stream: ${error}`)
     } finally {
       reader.releaseLock()
+      setIsStreaming(false)
     }
+  }
+
+  function handleRegenerate() {
+    const { content } = messages[messages.length - 2]
+    setMessages(messages => ([
+      ...messages.slice(0, -2)
+    ]))
+    setRegenerate(content)
   }
 
   return (
@@ -140,7 +158,19 @@ export default function Page() {
       <div className="fixed w-full bottom-0 left-0 flex">
         <div className="hidden lg:block lg:basis-1/6" />
         <div className="flex-1 lg:basis-5/6">
-          <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
+          <div className="w-full h-12 bg-gradient-to-t from-white to-transparent">
+            <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex flex-row-reverse">
+              {isStreaming === false && messages.length > 1 && messages.length % 2 === 0 && (
+                <button
+                  className="p-2 border border-gray-300 text-sm text-gray-600 bg-white flex items-center gap-2"
+                  onClick={handleRegenerate}
+                >
+                  <ArrowPathIcon className="w-4 h-4" />
+                  Regenerate
+                </button>
+              )}
+            </div>
+          </div>
           <div className="w-full bg-white">
             <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto pb-4">
               <QuestionForm onSubmit={handleSubmit} />

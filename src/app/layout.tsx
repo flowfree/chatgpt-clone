@@ -4,7 +4,7 @@ import LocalFont from 'next/font/local'
 import { getServerSession } from 'next-auth'
 
 import SessionProvider from './components/session-provider'
-import { Sidebar } from '@/app/components'
+import { Sidebar } from './components/sidebar'
 
 const inter = LocalFont({
   src: '../../public/fonts/Inter-Variable.ttf'

@@ -1,5 +1,5 @@
 import ReactMarkdown from 'react-markdown'
-import { CodeBlock } from '@/app/components'
+import { CodeBlock } from './code-block'
 
 export function Markdown({
   content
