@@ -7,7 +7,7 @@ export function Sidebar() {
   const { data: session } = useSession()
 
   return (
-    <div className="sticky top-0 left-0 h-screen p-4 flex flex-col bg-gray-900 text-white z-10">
+    <div className="sticky top-0 left-0 h-screen p-4 flex flex-col bg-gray-800 text-white z-10">
       <div className="grow">
       </div>
       <p className="flex flex-row gap-2 items-center">

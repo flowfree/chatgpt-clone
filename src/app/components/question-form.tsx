@@ -38,7 +38,7 @@ export function QuestionForm({
       <div className="p-4 pb-3 flex gap-2 rounded-lg shadow-[0_0px_20px_rgba(0,0,0,0.2)]">
         <textarea 
           rows={numRows} 
-          className="grow border-0 outline-none resize-none"
+          className="grow border-0 outline-none resize-none py-1 text-sm sm:text-base sm:py-0"
           placeholder="Send a message"
           value={question}
           onChange={handleTextAreaChange}
