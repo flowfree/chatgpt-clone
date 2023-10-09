@@ -109,16 +109,14 @@ export default function Page() {
   }
 
   return (
-    <div>
+    <div className="relative">
       <div className="w-content">
-        <div className="pb-36">
-          <ChatMessages messages={messages} />
-        </div>
+        <ChatMessages messages={messages} />
       </div>
-      <div className="fixed w-full bottom-0 left-0">
+      <div className="sticky w-full bottom-0 left-0">
         <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
         <div className="w-full bg-white">
-          <div className="max-w-3xl mx-auto pt-2 pb-4">
+          <div className="max-w-3xl mx-auto pb-4">
             <QuestionForm onSubmit={handleSubmit} />
           </div>
         </div>
@@ -126,3 +124,19 @@ export default function Page() {
     </div>
   )
 }
+
+/*
+    <div className="relative">
+      <div className="w-content">
+        <ChatMessages messages={messages} />
+      </div>
+      <div className="sticky w-full bottom-0 left-0">
+        <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
+        <div className="w-full bg-white">
+          <div className="max-w-3xl mx-auto pb-4">
+            <QuestionForm onSubmit={handleSubmit} />
+          </div>
+        </div>
+      </div>
+    </div>
+ */
