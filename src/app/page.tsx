@@ -26,20 +26,22 @@ export default function Page() {
   }
 
   useEffect(() => {
-    showPrompt()
-    const timer = setTimeout(() => {
-      setIndex(i => i+1 < prompts.length ? i+1 : 0)
-    }, 5000)
+    let prompt = prompts[index]
+    const [text1, text2] = prompt.split(' - ')
+    setHeading(text1)
+    setSubheading('')
+
+    let timer: NodeJS.Timeout
+
+    setTimeout(() => {
+      setSubheading(text2)
+      timer = setTimeout(() => {
+        setIndex(i => i+1 < prompts.length ? i+1 : 0)
+      }, 5000)
+    }, 1000)
 
     return () => clearTimeout(timer)
   }, [index])
-
-  function showPrompt() {
-    let prompt = prompts[index]
-    const [h, s] = prompt.split(' - ')
-    setHeading(h)
-    setSubheading(s)
-  }
 
   return (
     <div className="w-full min-h-full flex flex-row">

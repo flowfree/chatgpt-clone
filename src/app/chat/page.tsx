@@ -48,18 +48,18 @@ console.log(fibNums);
 This JavaScript code will also generate and display the first \`n\` Fibonacci numbers when run in a web browser or a Node.js environment.`
 
 const initialMessages: Message[] = [
-  { 'role': 'user', content: 'Write python code to display Fibonacci' },
-  { 'role': 'assistant', content: content1 },
-  { 'role': 'user', content: 'Rewrite the code in Javascript' },
-  { 'role': 'assistant', content: content2 },
+  // { 'role': 'user', content: 'Write python code to display Fibonacci' },
+  // { 'role': 'assistant', content: content1 },
+  // { 'role': 'user', content: 'Rewrite the code in Javascript' },
+  // { 'role': 'assistant', content: content2 },
 ]
 
 
 
 export default function Page() {
-  const { data: session } = useSession()
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>(initialMessages)
 
+  const { data: session } = useSession()
   if (!session) {
     redirect('/')
   }
@@ -109,34 +109,21 @@ export default function Page() {
   }
 
   return (
-    <div className="relative">
-      <div className="w-content">
+    <div className="relative" style={{position: 'relative'}}>
+      <div className="w-content pb-32">
         <ChatMessages messages={messages} />
       </div>
-      <div className="sticky w-full bottom-0 left-0">
-        <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
-        <div className="w-full bg-white">
-          <div className="max-w-3xl mx-auto pb-4">
-            <QuestionForm onSubmit={handleSubmit} />
+      <div className="fixed w-full bottom-0 left-0 flex">
+        <div className="basis-1/5" />
+        <div className="basis-4/5">
+          <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
+          <div className="w-full bg-white">
+            <div className="max-w-3xl mx-auto pb-4">
+              <QuestionForm onSubmit={handleSubmit} />
+            </div>
           </div>
         </div>
       </div>
     </div>
   )
 }
-
-/*
-    <div className="relative">
-      <div className="w-content">
-        <ChatMessages messages={messages} />
-      </div>
-      <div className="sticky w-full bottom-0 left-0">
-        <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
-        <div className="w-full bg-white">
-          <div className="max-w-3xl mx-auto pb-4">
-            <QuestionForm onSubmit={handleSubmit} />
-          </div>
-        </div>
-      </div>
-    </div>
- */
