@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { QuestionForm } from '@/app/components'
-import { ChatMessages, type Message } from '@/app/components'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+import { Markdown } from '@/app/components'
+
+interface Message {
+  role: 'system' | 'assistant' | 'user'
+  content: string
+}
 
 const content1 = `Sure, here's a Python code snippet to display the Fibonacci sequence:
 
@@ -48,10 +53,10 @@ console.log(fibNums);
 This JavaScript code will also generate and display the first \`n\` Fibonacci numbers when run in a web browser or a Node.js environment.`
 
 const initialMessages: Message[] = [
-  // { 'role': 'user', content: 'Write python code to display Fibonacci' },
-  // { 'role': 'assistant', content: content1 },
-  // { 'role': 'user', content: 'Rewrite the code in Javascript' },
-  // { 'role': 'assistant', content: content2 },
+  { 'role': 'user', content: 'Write python code to display Fibonacci' },
+  { 'role': 'assistant', content: content1 },
+  { 'role': 'user', content: 'Rewrite the code in Javascript' },
+  { 'role': 'assistant', content: content2 },
 ]
 
 
@@ -109,16 +114,35 @@ export default function Page() {
   }
 
   return (
-    <div className="relative" style={{position: 'relative'}}>
+    <div className="relative">
       <div className="w-content pb-32">
-        <ChatMessages messages={messages} />
+
+        <ul>
+          {messages.map(({ role, content }, index) => (
+            <li key={index} className={`py-2 ` + (role === 'assistant' ? 'bg-gray-50 border-y border-y-gray-200/75' : '')}>
+              <div className="max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex gap-4 ">
+                <div className="lg:min-w-fit">
+                  {role === 'user' ? (
+                    <img src={session?.user?.image || ''} className="mt-2 w-9 h-auto bg-green-500" alt="" />
+                  ) : (
+                    <span className="mt-2 w-9 h-9 flex items-center justify-center bg-amber-400 text-xl text-black font-bold">B</span>
+                  )}
+                </div>
+                <div className="grow overflow-auto">
+                  <Markdown content={content} />
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
+
       <div className="fixed w-full bottom-0 left-0 flex">
-        <div className="basis-1/5" />
-        <div className="basis-4/5">
+        <div className="hidden lg:block lg:basis-1/6" />
+        <div className="flex-1 lg:basis-5/6">
           <div className="w-full h-12 bg-gradient-to-t from-white to-transparent" />
           <div className="w-full bg-white">
-            <div className="max-w-3xl mx-auto pb-4">
+            <div className="max-w-md sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto pb-4">
               <QuestionForm onSubmit={handleSubmit} />
             </div>
           </div>

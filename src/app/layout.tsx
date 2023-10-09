@@ -28,10 +28,10 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           {session ? (
             <div className="w-full flex">
-              <div className="basis-1/6">
+              <div className="hidden lg:block lg:basis-1/6">
                 <Sidebar />
               </div>
-              <div className="basis-5/6">
+              <div className="flex-1 lg:basis-5/6">
                 {children}
               </div>
             </div>
