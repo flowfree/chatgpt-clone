@@ -45,7 +45,7 @@ export default function Page() {
 
   return (
     <div className="w-full min-h-full flex flex-row">
-      <div className="py-4 px-8 basis-2/3 bg-gray-100 flex flex-col">
+      <div className="hidden py-4 px-8 md:basis-1/2 lg:basis-2/3 bg-gray-100 md:flex md:flex-col">
         <h2 className="text-lg font-bold tracking-tight">
           ChatGPT clone
         </h2>
@@ -60,20 +60,23 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div className="py-8 basis-1/3 flex flex-col">
+      <div className="py-4 px-8 flex-1 md:basis-1/2 lg:basis-1/3 flex flex-col">
+        <h2 className="block md:hidden text-lg font-bold tracking-tight">
+          ChatGPT clone
+        </h2>
         <div className="grow flex items-center justify-center">
           <div className="w-full flex flex-col items-center gap-4">
             <h2 className="text-3xl font-bold tracking-tight">
               Get started
             </h2>
-            <div className="px-8 w-full flex gap-2">
+            <div className="w-full flex flex-col sm:flex-row gap-2">
               <button 
-                className="py-2 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white"
+                className="py-3 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white"
                 onClick={() => signIn()}
               >
                 Sign In
               </button>
-              <button className="py-2 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white">
+              <button className="py-3 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white">
                 Sign Up
               </button>
             </div>
