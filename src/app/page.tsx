@@ -64,7 +64,7 @@ export default function Page() {
             <h2 className="text-3xl font-bold tracking-tight">
               Get started
             </h2>
-            <div className="w-full flex flex-col sm:flex-row gap-2">
+            <div className="w-full px-0 sm:px-14 flex flex-col sm:flex-row gap-2">
               <button 
                 className="py-2 flex-1 rounded-md shadow bg-indigo-600 hover:bg-indigo-600/90 text-base font-bold text-white"
                 onClick={() => signIn()}
