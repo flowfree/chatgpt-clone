@@ -59,7 +59,7 @@ export function CodeBlock({
     <div className="bg-gray-700 rounded-md">
       <div className="flex gap-2 items-center h-8 px-2 text-white text-sm">
         <p className="grow">
-          {language.charAt(0).toUpperCase() + language.slice(1)}
+          {displayLanguage(language)}
         </p>
         {isCopied ? (
           <p>
@@ -85,4 +85,21 @@ export function CodeBlock({
       </SyntaxHighlighter>
     </div>
   )
+}
+
+function displayLanguage(language: string) {
+  switch (language) {
+    case 'python':
+      return 'Python'
+    case 'javascript':
+      return 'JavaScript' 
+    case 'typescript':
+      return 'TypeScript'
+    case 'jsx':
+      return 'JSX'
+    case 'sql':
+      return 'SQL'
+    default:
+      return language
+  }
 }
