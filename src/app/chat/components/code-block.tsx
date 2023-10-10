@@ -5,6 +5,17 @@ import SyntaxHighlighter from 'react-syntax-highlighter'
 import { monokai, tomorrowNightBright } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import { DocumentDuplicateIcon } from '@heroicons/react/24/solid'
 
+const languages: {[key: string]: string} = {
+  python: 'Python',
+  javascript: 'JavaScript',
+  typescript: 'TypeScript',
+  jsx: 'JSX',
+  sql: 'SQL',
+  rust: 'Rust',
+  toml: 'TOML',
+  java: 'Java'
+}
+
 export function CodeBlock({
   language,
   children
@@ -59,7 +70,7 @@ export function CodeBlock({
     <div className="bg-gray-700 rounded-md">
       <div className="flex gap-2 items-center h-8 px-2 text-white text-sm">
         <p className="grow">
-          {displayLanguage(language)}
+          {languages[language]}
         </p>
         {isCopied ? (
           <p>
@@ -99,6 +110,10 @@ function displayLanguage(language: string) {
       return 'JSX'
     case 'sql':
       return 'SQL'
+    case 'rust':
+      return 'Rust'
+    case 'toml':
+      return 'TOML'
     default:
       return language
   }

@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
-import { QuestionForm } from './components/question-form'
-import { Markdown } from './components/markdown'
+import { Markdown, Avatar, QuestionForm } from './components'
 
 interface Message {
   role: 'system' | 'assistant' | 'user'
@@ -145,12 +144,12 @@ export default function Page() {
           {messages.map(({ role, content }, index) => (
             <li key={index} className={`py-2 ` + (role === 'assistant' ? 'bg-gray-50 border-y border-y-gray-200/75' : '')}>
               <div className="max-w-sm px-2 text-sm sm:px-0 sm:text-base sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex gap-4 ">
-                <div className="lg:min-w-fit">
-                  {role === 'user' ? (
-                    <img src={session?.user?.image || ''} className="mt-2 w-9 h-auto bg-green-500" alt="" />
-                  ) : (
-                    <span className="mt-2 w-9 h-9 flex items-center justify-center bg-amber-400 text-xl text-black font-bold">B</span>
-                  )}
+                <div className="lg:min-w-fit pt-2">
+                  <Avatar 
+                    role={role} 
+                    name={session?.user?.name || session?.user?.email} 
+                    image={session?.user?.image}
+                  />
                 </div>
                 <div className="grow overflow-auto">
                   <Markdown content={content} />
