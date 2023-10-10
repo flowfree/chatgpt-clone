@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
-import { Markdown, Avatar, QuestionForm } from './components'
+
+import { Avatar } from '@/app/components'
+import { Markdown, QuestionForm } from './components'
 
 interface Message {
   role: 'system' | 'assistant' | 'user'
@@ -50,7 +52,7 @@ export default function Page() {
       throw new Error('Stream is null')
     }
 
-    setMessages(messages => ([...messages, { role: 'assistant', content: '...' }]))
+    setMessages(m => ([ ...m, { role: 'assistant', content: '...' }]))
 
     const reader = stream.getReader()
     const textDecoder = new TextDecoder('utf-8')
@@ -61,10 +63,7 @@ export default function Page() {
         const { value, done } = await reader.read()
         if (done) break
         content += textDecoder.decode(value)
-        setMessages(messages => ([
-          ...messages.slice(0, -1),
-          { role: 'assistant', content }
-        ]))
+        setMessages(m => ([...m.slice(0, -1), { role: 'assistant', content }]))
       }
     } catch (error) {
       console.error(`Error reading from stream: ${error}`)

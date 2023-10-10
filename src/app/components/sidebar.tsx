@@ -2,7 +2,7 @@
 
 import { signOut, useSession } from 'next-auth/react'
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'
-import { Avatar } from '../chat/components'
+import { Avatar } from './avatar'
 
 export function Sidebar() {
   const { data: session } = useSession()

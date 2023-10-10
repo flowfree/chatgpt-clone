@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import { monokai, tomorrowNightBright } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import { DocumentDuplicateIcon } from '@heroicons/react/24/solid'
 
 const languages: {[key: string]: string} = {
@@ -14,7 +14,9 @@ const languages: {[key: string]: string} = {
   rust: 'Rust',
   toml: 'TOML',
   java: 'Java',
-  html: 'HTML'
+  html: 'HTML',
+  bash: 'Bash',
+  prisma: 'Prisma'
 }
 
 export function CodeBlock({

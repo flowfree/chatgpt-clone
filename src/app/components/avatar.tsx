@@ -11,7 +11,7 @@ export function Avatar({
     return <img src={image} className="w-9 h-auto bg-white" alt="" />
   } else if (role === 'user') {
     return (
-      <span className="w-9 h-9 bg-indigo-700 text-white font-bold flex items-center justify-center">
+      <span className="w-9 h-9 bg-indigo-700 text-xl text-white font-bold flex items-center justify-center">
         {name ? name.charAt(0).toUpperCase() : 'U'}
       </span>
     )
