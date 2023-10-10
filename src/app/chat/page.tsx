@@ -11,58 +11,8 @@ interface Message {
   content: string
 }
 
-const content1 = `Sure, here's a Python code snippet to display the Fibonacci sequence:
-
-~~~python
-def fibonacci(n):
-    fib_sequence = [0, 1]
-    
-    while len(fib_sequence) < n:
-        next_num = fib_sequence[-1] + fib_sequence[-2]
-        fib_sequence.append(next_num)
-    
-    return fib_sequence
-
-n = int(input("Enter the number of Fibonacci numbers to generate: "))
-fib_nums = fibonacci(n)
-print(fib_nums)
-~~~
-
-Just run this code, and it will display the first n Fibonacci numbers.
-`
-
-const content2 = `Here's the equivalent code in JavaScript to display the Fibonacci sequence:
-
-~~~javascript
-function fibonacci(n) {
-  const fibSequence = [0, 1];
-
-  while (fibSequence.length < n) {
-    const nextNum = fibSequence[fibSequence.length - 1] + fibSequence[fibSequence.length - 2];
-    fibSequence.push(nextNum);
-  }
-
-  return fibSequence;
-}
-
-const n = parseInt(prompt("Enter the number of Fibonacci numbers to generate:"));
-const fibNums = fibonacci(n);
-console.log(fibNums);
-~~~
-
-This JavaScript code will also generate and display the first \`n\` Fibonacci numbers when run in a web browser or a Node.js environment.`
-
-const initialMessages: Message[] = [
-  // { 'role': 'user', content: 'Write python code to display Fibonacci' },
-  // { 'role': 'assistant', content: content1 },
-  // { 'role': 'user', content: 'Rewrite the code in Javascript' },
-  // { 'role': 'assistant', content: content2 },
-]
-
-
-
 export default function Page() {
-  const [messages, setMessages] = useState<Message[]>(initialMessages)
+  const [messages, setMessages] = useState<Message[]>([])
   const [regenerate, setRegenerate] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
 
@@ -144,7 +94,7 @@ export default function Page() {
           {messages.map(({ role, content }, index) => (
             <li key={index} className={`py-2 ` + (role === 'assistant' ? 'bg-gray-50 border-y border-y-gray-200/75' : '')}>
               <div className="max-w-sm px-2 text-sm sm:px-0 sm:text-base sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex gap-4 ">
-                <div className="lg:min-w-fit pt-2">
+                <div className="shrink-0 first-letter:lg:min-w-fit pt-2">
                   <Avatar 
                     role={role} 
                     name={session?.user?.name || session?.user?.email} 

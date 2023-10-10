@@ -8,7 +8,7 @@ export function Avatar({
   image?: string | null 
 }) {
   if (role === 'user' && image) {
-    return <img src={image} className="w-9 h-9 bg-gray-500" alt="" />
+    return <img src={image} className="w-9 h-auto bg-white" alt="" />
   } else if (role === 'user') {
     return (
       <span className="w-9 h-9 bg-indigo-700 text-white font-bold flex items-center justify-center">

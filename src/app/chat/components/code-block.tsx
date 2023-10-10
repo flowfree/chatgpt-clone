@@ -13,7 +13,8 @@ const languages: {[key: string]: string} = {
   sql: 'SQL',
   rust: 'Rust',
   toml: 'TOML',
-  java: 'Java'
+  java: 'Java',
+  html: 'HTML'
 }
 
 export function CodeBlock({
@@ -70,7 +71,7 @@ export function CodeBlock({
     <div className="bg-gray-700 rounded-md">
       <div className="flex gap-2 items-center h-8 px-2 text-white text-sm">
         <p className="grow">
-          {languages[language]}
+          {languages[language] || language}
         </p>
         {isCopied ? (
           <p>
@@ -96,25 +97,4 @@ export function CodeBlock({
       </SyntaxHighlighter>
     </div>
   )
-}
-
-function displayLanguage(language: string) {
-  switch (language) {
-    case 'python':
-      return 'Python'
-    case 'javascript':
-      return 'JavaScript' 
-    case 'typescript':
-      return 'TypeScript'
-    case 'jsx':
-      return 'JSX'
-    case 'sql':
-      return 'SQL'
-    case 'rust':
-      return 'Rust'
-    case 'toml':
-      return 'TOML'
-    default:
-      return language
-  }
 }

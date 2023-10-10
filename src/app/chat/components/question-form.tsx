@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid'
 
 export function QuestionForm({
@@ -8,22 +8,29 @@ export function QuestionForm({
 }: {
   onSubmit: (question: string) => void
 }) {
-  const [numRows, setNumRows] = useState(1)
   const [question, setQuestion] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (question === '' && textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+    }
+  }, [question])
 
   function handleSubmit() {
     if (question) {
       onSubmit(question)
       setQuestion('')
-      setNumRows(1)
     }
   }
 
   function handleTextAreaChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const { value } = e.target
-    const newRows = value.split('\n').length
-    setNumRows(Math.min(newRows, 5));
     setQuestion(value)
+    if (value) {
+      e.target.style.height = 'auto'; 
+      e.target.style.height = Math.min(e.target.scrollHeight, 200) + 'px'
+    }
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -37,7 +44,8 @@ export function QuestionForm({
     <form className="w-full">
       <div className="p-4 pb-3 flex gap-2 rounded-lg shadow-[0_0px_20px_rgba(0,0,0,0.2)]">
         <textarea 
-          rows={numRows} 
+          ref={textareaRef}
+          rows={1}
           className="grow border-0 outline-none resize-none py-1 text-sm sm:text-base sm:py-0"
           placeholder="Send a message"
           value={question}
