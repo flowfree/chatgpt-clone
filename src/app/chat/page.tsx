@@ -5,7 +5,8 @@ import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 
-import { Avatar } from '@/app/components'
+import { createNewThread } from './actions'
+import { Avatar, AlertError } from '@/app/components'
 import { Markdown, QuestionForm } from './components'
 
 interface Message {
@@ -15,6 +16,7 @@ interface Message {
 
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([])
+  const [error, setError] = useState('')
   const [regenerate, setRegenerate] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
 
@@ -23,8 +25,8 @@ export default function Page() {
     redirect('/')
   }
 
+  // Always scroll to the bottom of the page on each message changes
   useEffect(() => {
-    // Always scroll to the bottom of the page on each message changes
     document.documentElement.scrollTop = document.documentElement.scrollHeight;
     document.body.scrollTop = document.body.scrollHeight;
   }, [messages])
@@ -61,7 +63,10 @@ export default function Page() {
     try {
       while (true) {
         const { value, done } = await reader.read()
-        if (done) break
+        if (done) {
+          await createNewThread(question, content)
+          break
+        }
         content += textDecoder.decode(value)
         setMessages(m => ([...m.slice(0, -1), { role: 'assistant', content }]))
       }
@@ -109,6 +114,13 @@ export default function Page() {
             </li>
           ))}
         </ul>
+
+        {error && (
+          <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
+            <AlertError>{error}</AlertError>
+          </div>
+        )}
+
       </div>
 
       <div className="fixed w-full bottom-0 left-0 flex">
