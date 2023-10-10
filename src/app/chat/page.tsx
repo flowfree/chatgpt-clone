@@ -25,12 +25,14 @@ export default function Page() {
     // Always scroll to the bottom of the page on each message changes
     document.documentElement.scrollTop = document.documentElement.scrollHeight;
     document.body.scrollTop = document.body.scrollHeight;
+  }, [messages])
 
+  useEffect(() => {
     if (regenerate) {
       handleSubmit(regenerate)
       setRegenerate('')
     }
-  }, [messages, regenerate])
+  }, [regenerate])
 
   async function handleSubmit(question: string) {
     const newMessages: Message[] = [...messages, { role: 'user', content: question }]
