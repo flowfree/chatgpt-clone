@@ -132,7 +132,6 @@ export default function Page({
             <AlertError>{error}</AlertError>
           </div>
         )}
-
       </div>
 
       <div className="fixed w-full bottom-0 left-0 flex">
