@@ -15,7 +15,7 @@ import {
 
 import { type Thread } from '@/app/lib/types'
 import { getThreads, renameThread, deleteThread } from '../chat/actions'
-import { Avatar } from './avatar'
+import { Avatar, TypeWriter } from '@/app/components'
 
 export function Sidebar() {
   const [threads, setThreads] = useState<Thread[]>([])

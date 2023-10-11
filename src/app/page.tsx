@@ -5,6 +5,8 @@ import { signIn, useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
+import { TypeWriter } from '@/app/components'
+
 const prompts = [
   'Plan a trip - to see the northern lights in Norway',
   'Suggest fun activities - for a team-building day with remote employees',
@@ -50,7 +52,7 @@ export default function Page() {
               {heading}
             </h2>
             <p className="mt-2 text-2xl tracking-tight text-gray-800 h-16">
-              <Typewriter text={subheading} />
+              <TypeWriter text={subheading} />
             </p>
           </div>
         </div>
@@ -97,63 +99,63 @@ export default function Page() {
   )
 }
 
-function Typewriter({ 
-  text, 
-  speed = 50,
-  initialDelay = 1000
-}: { 
-  text: string, 
-  speed?: number
-  initialDelay?: number
-}) {
-  const [displayText, setDisplayText] = useState('')
-  const [currentIndex, setCurrentIndex] = useState<number | null>(null)
-  const [blinkingCursor, setBlinkingCursor] = useState(false)
-  const [showCursor, setShowCursor] = useState(false)
+// function Typewriter({ 
+//   text, 
+//   speed = 50,
+//   initialDelay = 1000
+// }: { 
+//   text: string, 
+//   speed?: number
+//   initialDelay?: number
+// }) {
+//   const [displayText, setDisplayText] = useState('')
+//   const [currentIndex, setCurrentIndex] = useState<number | null>(null)
+//   const [blinkingCursor, setBlinkingCursor] = useState(false)
+//   const [showCursor, setShowCursor] = useState(false)
 
-  useEffect(() => {
-    setDisplayText('')
-    const timer = setTimeout(() => {
-      setCurrentIndex(0)
-    }, initialDelay)
+//   useEffect(() => {
+//     setDisplayText('')
+//     const timer = setTimeout(() => {
+//       setCurrentIndex(0)
+//     }, initialDelay)
 
-    return () => clearTimeout(timer)
-  }, [text])
+//     return () => clearTimeout(timer)
+//   }, [text])
 
-  useEffect(() => {
-    setShowCursor(true)
+//   useEffect(() => {
+//     setShowCursor(true)
 
-    if (currentIndex === null) {
-      return
-    }
+//     if (currentIndex === null) {
+//       return
+//     }
 
-    const timer = setTimeout(() => {
-      if (currentIndex < text.length) {
-        setDisplayText((prevText) => prevText + text[currentIndex])
-        setCurrentIndex((prevIndex) => prevIndex === null ? prevIndex : prevIndex+1)
-      } else {
-        setBlinkingCursor(true)
-        clearTimeout(timer)
-      }
-    }, speed)
+//     const timer = setTimeout(() => {
+//       if (currentIndex < text.length) {
+//         setDisplayText((prevText) => prevText + text[currentIndex])
+//         setCurrentIndex((prevIndex) => prevIndex === null ? prevIndex : prevIndex+1)
+//       } else {
+//         setBlinkingCursor(true)
+//         clearTimeout(timer)
+//       }
+//     }, speed)
 
-    return () => clearTimeout(timer)
-  }, [currentIndex])
+//     return () => clearTimeout(timer)
+//   }, [currentIndex])
 
-  useEffect(() => {
-    if (showCursor && blinkingCursor) {
-      const timer = setInterval(() => {
-        setShowCursor(c => !c)
-      }, 500)
+//   useEffect(() => {
+//     if (showCursor && blinkingCursor) {
+//       const timer = setInterval(() => {
+//         setShowCursor(c => !c)
+//       }, 500)
       
-      return () => clearInterval(timer)
-    }
-  }, [blinkingCursor])
+//       return () => clearInterval(timer)
+//     }
+//   }, [blinkingCursor])
 
-  return (
-    <span>
-      {displayText}
-      {showCursor && <span>{` _`}</span>}
-    </span>  
-  )
-}
+//   return (
+//     <span>
+//       {displayText}
+//       {showCursor && <span>{` _`}</span>}
+//     </span>  
+//   )
+// }
