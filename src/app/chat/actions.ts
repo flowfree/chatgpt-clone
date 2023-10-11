@@ -57,12 +57,21 @@ export async function getThreads() {
 /**
  * Rename the title of the thread 
  */
-export async function renameThread(threadId: string, title: string) {
+export async function renameThread(id: string, title: string) {
   try {
     await prisma.thread.update({
-      where: { id: threadId },
-      data: { title } 
+      data: { title },
+      where: { id }
     })
+    return { success: true }
+  } catch (err) {
+    return { success: false, message: `${err}` }
+  }
+}
+
+export async function deleteThread(id: string) {
+  try {
+    await prisma.thread.delete({ where: { id } })
     return { success: true }
   } catch (err) {
     return { success: false, message: `${err}` }

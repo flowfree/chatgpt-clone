@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import { PlusIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'
 import { 
@@ -14,7 +14,7 @@ import {
 } from '@heroicons/react/24/outline'
 
 import { type Thread } from '@/app/lib/types'
-import { getThreads, renameThread } from '../chat/actions'
+import { getThreads, renameThread, deleteThread } from '../chat/actions'
 import { Avatar } from './avatar'
 
 export function Sidebar() {
@@ -89,12 +89,14 @@ function ThreadListItem({
 }) {
   enum Mode {
     Normal,
-    Editing
+    Editing,
+    Deleting
   }
 
   const [mode, setMode] = useState<Mode>(Mode.Normal)
   const [displayTitle, setDisplayTitle] = useState(title)
   const [newTitle, setNewTitle] = useState(title)
+  const router = useRouter()
 
   async function handleRename(e: React.FormEvent | null) {
     if (e) {
@@ -105,45 +107,76 @@ function ThreadListItem({
     setMode(Mode.Normal)
   }
 
+  async function handleDelete() {
+    await deleteThread(id)
+    router.push('/chat')
+  }
+
   return (
-    <li key={id} className={`text-gray-300 px-2 py-3 flex gap-2 items-center text-sm ` + (active ? 'rounded-md bg-stone-800' : '')}>
-      <ChatBubbleLeftIcon className="shrink-0 w-4 h-4" />
+    <li key={id} className={`text-gray-300 px-2 py-3 text-sm ` + (active ? 'rounded-md bg-stone-800' : '')}>
+      <div className="flex gap-2 items-center">
+        <ChatBubbleLeftIcon className="shrink-0 w-4 h-4" />
 
-      {mode === Mode.Editing ? (
-        <form onSubmit={handleRename}>
-          <input 
-            type="text" 
-            name="title" 
-            value={newTitle}
-            className="w-full bg-stone-800 border border-blue-700 outline-none"
-            onChange={e => setNewTitle(e.target.value)}
-          />
-        </form>
-      ) : (
-        <Link href={`/chat/${id}`} className="grow line-clamp-1" title={displayTitle}>
-          {displayTitle}
-        </Link>
-      )}
+        {mode === Mode.Editing ? (
+          <form onSubmit={handleRename}>
+            <input 
+              type="text" 
+              name="title" 
+              value={newTitle}
+              className="w-full bg-stone-800 border border-blue-700 outline-none"
+              onChange={e => setNewTitle(e.target.value)}
+            />
+          </form>
+        ) : (
+          <Link href={`/chat/${id}`} className="grow line-clamp-1" title={displayTitle}>
+            {displayTitle}
+          </Link>
+        )}
 
-      {mode === Mode.Editing && (
-        <div className="flex gap-2 items-center">
-          <button onClick={handleRename}>
-            <CheckIcon className="w-4 h-4 hover:text-green-400" />
-          </button>
-          <button onClick={() => setMode(Mode.Normal)}>
-            <XMarkIcon className="w-4 h-4 hover:text-red-400" />
-          </button>
-        </div>
-      )}
+        {mode === Mode.Editing && (
+          <div className="flex gap-2 items-center">
+            <button onClick={handleRename}>
+              <CheckIcon className="w-4 h-4 hover:text-green-400" />
+            </button>
+            <button onClick={() => setMode(Mode.Normal)}>
+              <XMarkIcon className="w-4 h-4 hover:text-red-400" />
+            </button>
+          </div>
+        )}
 
-      {mode === Mode.Normal && active && (
-        <div className="flex gap-2 items-center">
-          <button onClick={() => setMode(Mode.Editing)}>
-            <PencilIcon className="w-4 h-4" />
-          </button>
-          <button>
-            <TrashIcon className="w-4 h-4" />
-          </button>
+        {mode === Mode.Normal && active && (
+          <div className="flex gap-2 items-center">
+            <button onClick={() => setMode(Mode.Editing)}>
+              <PencilIcon className="w-4 h-4" />
+            </button>
+            <button onClick={() => setMode(Mode.Deleting)}>
+              <TrashIcon className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {mode === Mode.Deleting && (
+        <div className="p-2 m-2 rounded-sm bg-red-100 text-red-900">
+          <p>
+            Chat will be deleted. Are you sure?
+          </p>
+          <p className="flex flex-row-reverse gap-2 font-bold">
+            <button 
+              className="flex gap-1 items-center text-green-800"
+              onClick={() => setMode(Mode.Normal)}
+            >
+              <XMarkIcon className="w-4 h-4" />
+              No
+            </button>
+            <button 
+              className="flex gap-1 items-center"
+              onClick={handleDelete}
+            >
+              <CheckIcon className="w-4 h-4" />
+              Yes
+            </button>
+          </p>
         </div>
       )}
     </li>
