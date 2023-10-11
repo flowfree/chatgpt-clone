@@ -1,126 +1,30 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
-import { ArrowPathIcon } from '@heroicons/react/24/outline'
+import { redirect, useRouter } from 'next/navigation'
 
-import { createNewThread } from './actions'
-import { Avatar, AlertError } from '@/app/components'
-import { Markdown, QuestionForm } from './components'
-
-interface Message {
-  role: 'system' | 'assistant' | 'user'
-  content: string
-}
+import { createThread } from './actions'
+import { QuestionForm } from './components'
 
 export default function Page() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const [error, setError] = useState('')
-  const [regenerate, setRegenerate] = useState('')
-  const [isStreaming, setIsStreaming] = useState(false)
-
   const { data: session } = useSession()
+  const router = useRouter()
+
   if (!session) {
     redirect('/')
   }
 
-  // Always scroll to the bottom of the page on each message changes
-  useEffect(() => {
-    document.documentElement.scrollTop = document.documentElement.scrollHeight;
-    document.body.scrollTop = document.body.scrollHeight;
-  }, [messages])
-
-  useEffect(() => {
-    if (regenerate) {
-      handleSubmit(regenerate)
-      setRegenerate('')
-    }
-  }, [regenerate])
-
   async function handleSubmit(question: string) {
-    const newMessages: Message[] = [...messages, { role: 'user', content: question }]
-    setMessages(newMessages)
-    setIsStreaming(true)
-
-    const response = await fetch('/api/chat', { 
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: newMessages })
-    })
-
-    const stream = response.body
-    if (stream === null) {
-      throw new Error('Stream is null')
-    }
-
-    setMessages(m => ([ ...m, { role: 'assistant', content: '...' }]))
-
-    const reader = stream.getReader()
-    const textDecoder = new TextDecoder('utf-8')
-    let content = ''
-
-    try {
-      while (true) {
-        const { value, done } = await reader.read()
-        if (done) {
-          await createNewThread(question, content)
-          break
-        }
-        content += textDecoder.decode(value)
-        setMessages(m => ([...m.slice(0, -1), { role: 'assistant', content }]))
-      }
-    } catch (error) {
-      console.error(`Error reading from stream: ${error}`)
-    } finally {
-      reader.releaseLock()
-      setIsStreaming(false)
-    }
-  }
-
-  function handleRegenerate() {
-    const { content } = messages[messages.length - 2]
-    setMessages(messages => ([
-      ...messages.slice(0, -2)
-    ]))
-    setRegenerate(content)
+    const { success, message, threadId } = await createThread(question)
+    router.push(`/chat/${threadId}`)
   }
 
   return (
     <div className="relative">
       <div className="w-content pb-32">
-
-        {messages.length === 0 && (
-          <h2 className="mt-8 text-center text-3xl font-bold tracking-tight text-gray-300">
-            ChatGPT clone
-          </h2>
-        )}
-
-        <ul>
-          {messages.map(({ role, content }, index) => (
-            <li key={index} className={`py-2 ` + (role === 'assistant' ? 'bg-gray-50 border-y border-y-gray-200/75' : '')}>
-              <div className="max-w-sm px-2 text-sm sm:px-0 sm:text-base sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex gap-4 ">
-                <div className="shrink-0 first-letter:lg:min-w-fit pt-2">
-                  <Avatar 
-                    role={role} 
-                    name={session?.user?.name || session?.user?.email} 
-                    image={session?.user?.image}
-                  />
-                </div>
-                <div className="grow overflow-auto">
-                  <Markdown content={content} />
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        {error && (
-          <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
-            <AlertError>{error}</AlertError>
-          </div>
-        )}
-
+        <h2 className="mt-8 text-center text-3xl font-bold tracking-tight text-gray-300">
+          ChatGPT clone
+        </h2>
       </div>
 
       <div className="fixed w-full bottom-0 left-0 flex">
@@ -128,15 +32,6 @@ export default function Page() {
         <div className="flex-1 lg:basis-5/6">
           <div className="w-full h-12 bg-gradient-to-t from-white to-transparent">
             <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex flex-row-reverse">
-              {isStreaming === false && messages.length > 1 && messages.length % 2 === 0 && (
-                <button
-                  className="p-2 border border-gray-300 text-sm text-gray-600 bg-white flex items-center gap-2"
-                  onClick={handleRegenerate}
-                >
-                  <ArrowPathIcon className="w-4 h-4" />
-                  Regenerate
-                </button>
-              )}
             </div>
           </div>
           <div className="w-full bg-white">
