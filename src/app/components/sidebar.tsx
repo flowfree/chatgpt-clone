@@ -158,10 +158,10 @@ function ThreadListItem({
 
       {mode === Mode.Deleting && (
         <div className="p-2 m-2 rounded-sm bg-red-100 text-red-900">
-          <p className="font-semibold">
+          <p>
             Chat will be deleted. Are you sure?
           </p>
-          <p className="mt-2 flex flex-row-reverse gap-2 font-bold">
+          <p className="mt-2 flex flex-row-reverse gap-2">
             <button 
               className="px-1 flex gap-1 items-center rounded-md text-green-800 border border-green-600/50 hover:border-green-600"
               onClick={() => setMode(Mode.Normal)}
