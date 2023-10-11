@@ -5,6 +5,9 @@ import { PrismaClient, Role } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+/**
+ * Create a new thread with the given argument as the first message  
+ */
 export async function createThread(firstMessage: string) {
   const session = await getServerSession()
 
@@ -27,6 +30,9 @@ export async function createThread(firstMessage: string) {
   }
 }
 
+/**
+ * Get all messages for the given thread
+ */
 export async function getMessages(threadId: string) {
   const messages = await prisma.message.findMany({
     where: { threadId }
@@ -35,6 +41,9 @@ export async function getMessages(threadId: string) {
   return messages.map(({ id, role, content }) => ({ id, role, content }))
 }
 
+/**
+ * Add new message for the given thread 
+ */
 export async function addMessage(threadId: string, role: 'user' | 'assistant', content: string) {
   const message = await prisma.message.create({
     data: { threadId, role, content }
@@ -43,6 +52,9 @@ export async function addMessage(threadId: string, role: 'user' | 'assistant', c
   return { success: true, id: message.id }
 }
 
+/**
+ * Delete a message
+ */
 export async function deleteMessage(id: string) {
   try {
     const message = await prisma.message.findFirst({ where: { id } })
