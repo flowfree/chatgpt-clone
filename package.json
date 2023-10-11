@@ -23,6 +23,7 @@
     "react-syntax-highlighter": "^15.5.0"
   },
   "devDependencies": {
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.11",
     "@types/react": "^18",

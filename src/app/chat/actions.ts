@@ -31,11 +31,36 @@ export async function createThread(firstMessage: string) {
 }
 
 /**
+ * Get all threads
+ */
+export async function getThreads() {
+  const session = await getServerSession()
+
+  if (!session?.user?.email) {
+    return { success: false, message: 'Unauthorized' }
+  }
+
+  try {
+    const { email } = session.user
+    const result = await prisma.thread.findMany({
+      where: { user: { email  } },
+      orderBy: { createdAt: 'desc' }
+    })
+
+    const threads = result.map(({ id, title }) => ({ id, title }))
+    return { success: true, threads }
+  } catch (err) {
+    return { success: false, message: `${err}` }
+  }
+}
+
+/**
  * Get all messages for the given thread
  */
 export async function getMessages(threadId: string) {
   const messages = await prisma.message.findMany({
-    where: { threadId }
+    where: { threadId },
+    orderBy: { createdAt: 'asc' }
   })
 
   return messages.map(({ id, role, content }) => ({ id, role, content }))

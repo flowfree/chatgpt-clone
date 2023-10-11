@@ -6,14 +6,9 @@ import { useSession } from 'next-auth/react'
 import { ArrowPathIcon } from '@heroicons/react/24/solid'
 
 import { getMessages, addMessage, deleteMessage } from '../actions'
+import { type Message } from '@/app/lib/types'
 import { Avatar, AlertError } from '@/app/components'
 import { Markdown, QuestionForm } from '../components'
-
-interface Message {
-  id?: string
-  role: 'system' | 'assistant' | 'user'
-  content: string
-}
 
 export default function Page({ 
   params: { threadId } 

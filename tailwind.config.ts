@@ -11,6 +11,8 @@ const config: Config = {
       'mono': ['monaco', 'courier new', 'ui-monospace']
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+  ],
 }
 export default config
