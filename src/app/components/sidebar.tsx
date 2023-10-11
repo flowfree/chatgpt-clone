@@ -5,10 +5,16 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import { PlusIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'
-import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
+import { 
+  ChatBubbleLeftIcon, 
+  PencilIcon, 
+  TrashIcon, 
+  CheckIcon,
+  XMarkIcon 
+} from '@heroicons/react/24/outline'
 
 import { type Thread } from '@/app/lib/types'
-import { getThreads } from '../chat/actions'
+import { getThreads, renameThread } from '../chat/actions'
 import { Avatar } from './avatar'
 
 export function Sidebar() {
@@ -40,12 +46,12 @@ export function Sidebar() {
 
         <ul className="mt-6 flex flex-col">
           {threads.map(({ id, title }) => (
-            <li key={id} className={`text-gray-300 px-2 py-3 flex gap-2 items-center text-sm ` + (id === currentThreadId ? 'rounded-md bg-stone-800' : '')}>
-              <ChatBubbleLeftIcon className="w-4 h-4" />
-              <Link href={`/chat/${id}`} className="line-clamp-1">
-                {title}
-              </Link>
-            </li>
+            <ThreadListItem 
+              key={id} 
+              id={id} 
+              title={title} 
+              active={currentThreadId === id} 
+            />
           ))}
         </ul>
 
@@ -69,5 +75,77 @@ export function Sidebar() {
         </div>
       </div>
     </div>
+  )
+}
+
+function ThreadListItem({
+  id,
+  title,
+  active
+}: {
+  id: string
+  title: string
+  active: boolean
+}) {
+  enum Mode {
+    Normal,
+    Editing
+  }
+
+  const [mode, setMode] = useState<Mode>(Mode.Normal)
+  const [displayTitle, setDisplayTitle] = useState(title)
+  const [newTitle, setNewTitle] = useState(title)
+
+  async function handleRename(e: React.FormEvent | null) {
+    if (e) {
+      e.preventDefault()
+    }
+    const {success} = await renameThread(id, newTitle) 
+    setDisplayTitle(success ? newTitle : title)
+    setMode(Mode.Normal)
+  }
+
+  return (
+    <li key={id} className={`text-gray-300 px-2 py-3 flex gap-2 items-center text-sm ` + (active ? 'rounded-md bg-stone-800' : '')}>
+      <ChatBubbleLeftIcon className="shrink-0 w-4 h-4" />
+
+      {mode === Mode.Editing ? (
+        <form onSubmit={handleRename}>
+          <input 
+            type="text" 
+            name="title" 
+            value={newTitle}
+            className="w-full bg-stone-800 border border-blue-700 outline-none"
+            onChange={e => setNewTitle(e.target.value)}
+          />
+        </form>
+      ) : (
+        <Link href={`/chat/${id}`} className="grow line-clamp-1" title={displayTitle}>
+          {displayTitle}
+        </Link>
+      )}
+
+      {mode === Mode.Editing && (
+        <div className="flex gap-2 items-center">
+          <button onClick={handleRename}>
+            <CheckIcon className="w-4 h-4 hover:text-green-400" />
+          </button>
+          <button onClick={() => setMode(Mode.Normal)}>
+            <XMarkIcon className="w-4 h-4 hover:text-red-400" />
+          </button>
+        </div>
+      )}
+
+      {mode === Mode.Normal && active && (
+        <div className="flex gap-2 items-center">
+          <button onClick={() => setMode(Mode.Editing)}>
+            <PencilIcon className="w-4 h-4" />
+          </button>
+          <button>
+            <TrashIcon className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+    </li>
   )
 }

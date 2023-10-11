@@ -55,6 +55,21 @@ export async function getThreads() {
 }
 
 /**
+ * Rename the title of the thread 
+ */
+export async function renameThread(threadId: string, title: string) {
+  try {
+    await prisma.thread.update({
+      where: { id: threadId },
+      data: { title } 
+    })
+    return { success: true }
+  } catch (err) {
+    return { success: false, message: `${err}` }
+  }
+}
+
+/**
  * Get all messages for the given thread
  */
 export async function getMessages(threadId: string) {
