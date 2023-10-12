@@ -141,7 +141,7 @@ function ThreadListItem({
   return (
     <li className={`text-gray-300 px-2 py-3 text-sm ` + (active ? 'rounded-md bg-stone-800' : '')}>
       <div className="flex gap-2 items-center">
-        <ChatBubbleLeftIcon className="shrink-0 w-4 h-4" />
+        <ChatBubbleLeftIcon className="shrink-0 w-5 h-5" />
 
         {mode === Mode.Editing ? (
           <form onSubmit={handleRename}>

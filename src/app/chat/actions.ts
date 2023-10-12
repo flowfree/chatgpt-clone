@@ -114,8 +114,10 @@ export async function suggestNewThreadTitle(threadId: string) {
     messages: [{ role: 'user', content }]
   })
 
-  if (completion.choices) {
-    return { success: true, title: completion.choices[0].message.content }
+  if (completion.choices[0].message.content) {
+    let { content } = completion.choices[0].message
+    const title = content?.replace(/^"(.*)"$/, '$1')
+    return { success: true, title }
   } else {
     return { success: false, message: 'Failed retrieving OpenAI response.' }
   }
