@@ -7,8 +7,8 @@ import { ArrowPathIcon } from '@heroicons/react/24/solid'
 
 import { getMessages, addMessage, deleteMessage } from '../actions'
 import { type Message } from '@/app/lib/types'
-import { Avatar, AlertError } from '@/app/components'
-import { Markdown, QuestionForm } from '../components'
+import { AlertError } from '@/app/components'
+import { MessageListItem, QuestionForm } from '../components'
 
 export default function Page({ 
   params: { threadId } 
@@ -104,24 +104,10 @@ export default function Page({
     <div className="relative">
       <div className="w-content pb-32">
         <ul>
-          {messages.map(({ id, role, content }, index) => (
-            <li key={index} className={`py-2 ` + (role === 'assistant' ? 'bg-gray-50 border-y border-y-gray-200/75' : '')}>
-              <div className="max-w-sm px-2 text-sm sm:px-0 sm:text-base sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex gap-4 ">
-                <div className="shrink-0 first-letter:lg:min-w-fit pt-2">
-                  <Avatar 
-                    role={role} 
-                    name={session?.user?.name || session?.user?.email} 
-                    image={session?.user?.image}
-                  />
-                </div>
-                <div className="grow overflow-auto">
-                  <Markdown content={content} />
-                </div>
-              </div>
-            </li>
+          {messages.map((message, index) => (
+            <MessageListItem key={message.id} message={message} />
           ))}
         </ul>
-
         {error && (
           <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
             <AlertError>{error}</AlertError>
