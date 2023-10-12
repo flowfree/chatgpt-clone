@@ -14,8 +14,13 @@ import {
 } from '@heroicons/react/24/outline'
 
 import { type Thread } from '@/app/lib/types'
-import { getThreads, renameThread, deleteThread } from '../chat/actions'
 import { Avatar, TypeWriter } from '@/app/components'
+import { 
+  getThreads, 
+  renameThread, 
+  deleteThread,
+  suggestNewThreadTitle
+} from '../chat/actions'
 
 export function Sidebar() {
   const [threads, setThreads] = useState<Thread[]>([])
@@ -90,20 +95,41 @@ function ThreadListItem({
   enum Mode {
     Normal,
     Editing,
-    Deleting
+    Deleting,
+    AutoTyping
   }
 
   const [mode, setMode] = useState<Mode>(Mode.Normal)
   const [displayTitle, setDisplayTitle] = useState(title)
-  const [newTitle, setNewTitle] = useState(title)
+  const [editTitle, setEditTitle] = useState(title)
   const router = useRouter()
 
-  async function handleRename(e: React.FormEvent | null) {
+  useEffect(() => {
+    async function fetchSuggestionTitle() {
+      const { title } = await suggestNewThreadTitle(id)
+      if (title) {
+        setDisplayTitle(' ')
+        const { success } = await renameThread(id, title) 
+        if (success) {
+          setDisplayTitle(title)
+          setEditTitle(title)
+          setMode(Mode.AutoTyping)
+        } else {
+          setDisplayTitle(editTitle)
+        }
+      }
+    }
+    if (active && displayTitle === 'New Chat') {
+      fetchSuggestionTitle()
+    }
+  }, [])
+
+  async function handleRename(e?: React.FormEvent) {
     if (e) {
       e.preventDefault()
     }
-    const {success} = await renameThread(id, newTitle) 
-    setDisplayTitle(success ? newTitle : title)
+    const { success } = await renameThread(id, editTitle) 
+    setDisplayTitle(success ? editTitle : title)
     setMode(Mode.Normal)
   }
 
@@ -113,7 +139,7 @@ function ThreadListItem({
   }
 
   return (
-    <li key={id} className={`text-gray-300 px-2 py-3 text-sm ` + (active ? 'rounded-md bg-stone-800' : '')}>
+    <li className={`text-gray-300 px-2 py-3 text-sm ` + (active ? 'rounded-md bg-stone-800' : '')}>
       <div className="flex gap-2 items-center">
         <ChatBubbleLeftIcon className="shrink-0 w-4 h-4" />
 
@@ -121,21 +147,28 @@ function ThreadListItem({
           <form onSubmit={handleRename}>
             <input 
               type="text" 
-              name="title" 
-              value={newTitle}
+              value={editTitle}
+              onChange={e => setEditTitle(e.target.value)}
               className="w-full bg-stone-800 border border-blue-700 outline-none"
-              onChange={e => setNewTitle(e.target.value)}
             />
           </form>
+        ) : (mode === Mode.AutoTyping ? (
+          <TypeWriter 
+            text={displayTitle} 
+            runIndefinitely={false} 
+            onCompleted={() => setMode(Mode.Normal)}
+          />
         ) : (
           <Link href={`/chat/${id}`} className="grow line-clamp-1" title={displayTitle}>
             {displayTitle}
           </Link>
-        )}
+        ))}
 
         {mode === Mode.Editing && (
           <div className="flex gap-2 items-center">
-            <button onClick={handleRename}>
+            <button 
+              onClick={handleRename}
+            >
               <CheckIcon className="w-4 h-4 hover:text-green-400" />
             </button>
             <button onClick={() => setMode(Mode.Normal)}>
@@ -157,20 +190,20 @@ function ThreadListItem({
       </div>
 
       {mode === Mode.Deleting && (
-        <div className="p-2 m-2 rounded-sm bg-red-100 text-red-900">
+        <div className="p-2 m-2 rounded-sm bg-red-100 text-red-900 text-sm">
           <p>
             Chat will be deleted. Are you sure?
           </p>
           <p className="mt-2 flex flex-row-reverse gap-2">
             <button 
-              className="px-1 flex gap-1 items-center rounded-md text-green-800 border border-green-600/50 hover:border-green-600"
+              className="px-1 flex gap-1 items-center rounded-md text-green-800 border border-green-600/50 hover:border-green-600 text-xs"
               onClick={() => setMode(Mode.Normal)}
             >
               <XMarkIcon className="w-4 h-4" />
               No
             </button>
             <button 
-              className="px-1 flex gap-1 items-center rounded-md border border-red-400/50 hover:border-red-400"
+              className="px-1 flex gap-1 items-center rounded-md border border-red-400/50 hover:border-red-400 text-xs"
               onClick={handleDelete}
             >
               <CheckIcon className="w-4 h-4" />

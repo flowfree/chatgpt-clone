@@ -6,12 +6,14 @@ export function TypeWriter({
   text, 
   speed = 50,
   initialDelay = 1000,
-  runIndefinitely = true
+  runIndefinitely = true,
+  onCompleted,
 }: { 
   text: string, 
   speed?: number
   initialDelay?: number
   runIndefinitely?: boolean
+  onCompleted?: () => void
 }) {
   const [displayText, setDisplayText] = useState('')
   const [currentIndex, setCurrentIndex] = useState<number | null>(null)
@@ -44,6 +46,7 @@ export function TypeWriter({
       } else {
         setShowCursor(false)
         clearTimeout(timer)
+        onCompleted && setTimeout(onCompleted, 500)
       }
     }, speed)
 
@@ -61,7 +64,7 @@ export function TypeWriter({
   }, [blinkingCursor])
 
   return (
-    <span>
+    <span className="line-clamp-1">
       {displayText}
       {showCursor && <span>{` _`}</span>}
     </span>  

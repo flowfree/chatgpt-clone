@@ -1,7 +1,17 @@
 'use server'
 
+import OpenAI from 'openai'
 import { getServerSession } from 'next-auth'
-import { PrismaClient, Role } from '@prisma/client'
+import { 
+  PrismaClient, 
+  Role, 
+  type Message 
+} from '@prisma/client'
+import { revalidatePath } from 'next/cache'
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})
 
 const prisma = new PrismaClient()
 
@@ -69,12 +79,45 @@ export async function renameThread(id: string, title: string) {
   }
 }
 
+/**
+ * Delete the specified thread
+ */
 export async function deleteThread(id: string) {
   try {
     await prisma.thread.delete({ where: { id } })
     return { success: true }
   } catch (err) {
     return { success: false, message: `${err}` }
+  }
+}
+
+export async function suggestNewThreadTitle(threadId: string) {
+  let message: Message | null
+
+  try {
+    message = await prisma.message.findFirst({
+      where: { threadId },
+      orderBy: { createdAt: 'asc' }
+    })
+  } catch (error) {
+    return { success: false, message: `${error}` }
+  }
+
+  if (message === null) {
+    return { success: false, message: 'No message for the given thread.' }
+  }
+
+  const content = `Extract suitable title for a chat, make it short and concise with a maximum of 5 words. Don't use any emoticons or wrap it in double quotes. The first message from the user is:\n\n${message.content}`
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-3.5-turbo-16k',
+    temperature: 0.7,
+    messages: [{ role: 'user', content }]
+  })
+
+  if (completion.choices) {
+    return { success: true, title: completion.choices[0].message.content }
+  } else {
+    return { success: false, message: 'Failed retrieving OpenAI response.' }
   }
 }
 
