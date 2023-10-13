@@ -48,7 +48,7 @@ export function MessageListItem({
           />
         </div>
         <div className="grow overflow-auto flex flex-row gap-2">
-          <div className="grow">
+          <div className="grow w-full">
             {isEditing ? (
               <textarea 
                 ref={inputRef}

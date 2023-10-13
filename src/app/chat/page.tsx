@@ -87,7 +87,7 @@ export default function Page() {
         <div className="hidden lg:block lg:basis-1/6" />
         <div className="flex-1 lg:basis-5/6">
           <div className="mb-8 max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
-            <ul className="grid grid-cols-2 gap-4">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {samplePrompts.map((prompt, index) => (
                 <li 
                   key={index} 
