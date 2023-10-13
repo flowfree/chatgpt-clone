@@ -50,6 +50,13 @@ export default function Page({
     setMessages(m => [...m.slice(0, -1), { id, role, content }])
   }
 
+  async function handleEditMessage(id: string, content: string) {
+    await deleteMessage(id)
+    const index = messages.findIndex(m => m.id === id)
+    setMessages(m => [...m.slice(0, index)])
+    handleUserMessage(content)
+  }
+
   async function handleRegenerateCompletion() {
     const { id } = messages[messages.length - 1]
     setMessages(m => [...m.slice(0, -1)])
@@ -105,7 +112,11 @@ export default function Page({
       <div className="w-content pb-32">
         <ul>
           {messages.map((message, index) => (
-            <MessageListItem key={message.id} message={message} />
+            <MessageListItem 
+              key={message.id || index} 
+              message={message} 
+              onEditMessage={handleEditMessage}
+            />
           ))}
         </ul>
         {error && (

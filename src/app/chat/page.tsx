@@ -49,6 +49,10 @@ const prompts: SamplePrompt[] = [{
   title: 'Plan a trip',
   subtitle: 'to see the best of New York in 3 days',
   message: 'I\'ll be in New York for 3 days. Can you recommend what I should do to see the best of the city?'
+}, {
+  title: 'Help me debug',
+  subtitle: 'a linked list problem',
+  message: 'What are some reasons why my linked list would appear empty after I tried reversing it?'
 }]
 
 export default function Page() {

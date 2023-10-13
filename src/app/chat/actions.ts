@@ -7,7 +7,6 @@ import {
   Role, 
   type Message 
 } from '@prisma/client'
-import { revalidatePath } from 'next/cache'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
