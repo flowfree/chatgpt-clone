@@ -22,7 +22,13 @@ import {
   suggestNewThreadTitle
 } from '../chat/actions'
 
-export function Sidebar() {
+export function Sidebar({
+  open = true,
+  onClose
+}: {
+  open?: boolean
+  onClose?: () => void
+}) {
   const [threads, setThreads] = useState<Thread[]>([])
   const pathname = usePathname()
   const { data: session } = useSession()
@@ -40,14 +46,21 @@ export function Sidebar() {
   }, [pathname])
 
   return (
-    <div className="sticky top-0 left-0 h-screen p-2 flex flex-col dark bg-stone-900 text-white z-10">
+    <div className={`${open ? '' : 'hidden'} sticky top-0 left-0 h-screen p-2 flex flex-col dark bg-stone-900 text-white z-10`}>
       <div className="grow">
-        <Link href="/chat" className="py-2 px-4 rounded-md flex text-sm border border-stone-600 hover:border-stone-500 text-gray-200">
-          <div className="flex gap-2 items-center">
-            <PlusIcon className="w-4 h-4" />
-            New Chat
-          </div>
-        </Link>
+        <div className="flex flex-row gap-4 items-center">
+          <Link href="/chat" className="grow py-2 px-4 rounded-md flex text-sm border border-stone-600 hover:border-stone-500 text-gray-200">
+            <div className="flex gap-2 items-center">
+              <PlusIcon className="w-4 h-4" />
+              New Chat
+            </div>
+          </Link>
+          {onClose && (
+            <button onClick={onClose}>
+              <XMarkIcon className="w-5 h-5" />
+            </button>
+          )}
+        </div>
 
         <ul className="mt-6 flex flex-col">
           {threads.map(({ id, title }) => (
@@ -139,7 +152,7 @@ function ThreadListItem({
   }
 
   return (
-    <li className={`text-gray-300 px-2 py-3 text-sm ` + (active ? 'rounded-md bg-stone-800' : '')}>
+    <li className={`${active ? 'rounded-md bg-stone-800' : ''} text-gray-300 px-2 py-3 text-sm w-[275px] sm:w-full`}>
       <div className="flex gap-2 items-center">
         <ChatBubbleLeftIcon className="shrink-0 w-5 h-5" />
 

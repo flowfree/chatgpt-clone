@@ -82,7 +82,6 @@ export default function Page() {
         </h2>
       </div>
 
-
       <div className="fixed w-full bottom-0 left-0 flex">
         <div className="hidden lg:block lg:basis-1/6" />
         <div className="flex-1 lg:basis-5/6">

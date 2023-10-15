@@ -4,7 +4,7 @@ import LocalFont from 'next/font/local'
 import { getServerSession } from 'next-auth'
 
 import SessionProvider from './components/session-provider'
-import { Sidebar } from './components/sidebar'
+import { TopNav, Sidebar } from '@/app/components'
 
 const inter = LocalFont({
   src: '../../public/fonts/Inter-Variable.ttf'
@@ -29,10 +29,15 @@ export default async function RootLayout({
           {session ? (
             <div className="w-full flex">
               <div className="hidden lg:block lg:basis-1/6">
-                <Sidebar />
+                <div className="sticky top-0 left-0 h-screen">
+                  <Sidebar />
+                </div>
               </div>
-              <div className="flex-1 lg:basis-5/6">
+              <div className="mt-10 sm:mt-0 flex-1 lg:basis-5/6">
                 {children}
+              </div>
+              <div className="block sm:hidden">
+                <TopNav />
               </div>
             </div>
           ) : (
