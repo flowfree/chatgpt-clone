@@ -29,7 +29,7 @@ export default async function RootLayout({
           {session ? (
             <div className="w-full flex">
               <div className="hidden lg:block lg:basis-1/6">
-                <div className="sticky top-0 left-0 h-screen">
+                <div className="sticky top-0 left-0 h-screen z-10">
                   <Sidebar />
                 </div>
               </div>
