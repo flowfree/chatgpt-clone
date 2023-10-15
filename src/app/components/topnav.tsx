@@ -22,7 +22,7 @@ export function TopNav() {
   return (
     <div className="relative">
       <div className="fixed p-2 top-0 inset-x-0 bg-black text-white">
-        <div className="absolute top-0 left-2 inset-y-0 flex items-center">
+        <div className="absolute top-0 left-4 inset-y-0 flex items-center">
           <button onClick={toggleSidebar}>
             <Bars3Icon className="w-5 h-5" />
           </button>
