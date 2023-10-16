@@ -17,11 +17,13 @@ export function TypeWriter({
 }) {
   const [displayText, setDisplayText] = useState('')
   const [currentIndex, setCurrentIndex] = useState<number | null>(null)
-  const [blinkingCursor, setBlinkingCursor] = useState(false)
-  const [showCursor, setShowCursor] = useState(false)
+  const [blinkingCursor, setBlinkingCursor] = useState(true)
+  const [showCursor, setShowCursor] = useState(true)
 
   useEffect(() => {
     setDisplayText('')
+    setCurrentIndex(null)
+
     const timer = setTimeout(() => {
       setCurrentIndex(0)
     }, initialDelay)
@@ -57,7 +59,7 @@ export function TypeWriter({
     if (showCursor && blinkingCursor) {
       const timer = setInterval(() => {
         setShowCursor(c => !c)
-      }, 500)
+      }, 250)
       
       return () => clearInterval(timer)
     }
