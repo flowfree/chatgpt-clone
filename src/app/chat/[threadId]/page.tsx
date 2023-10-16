@@ -142,7 +142,7 @@ export default function Page({
         <ul>
           {messages.map((message, index) => (
             <MessageListItem 
-              key={index === 0 ? 0 : (message.id || index)} 
+              key={index === 0 ? `0` : `${message.id || index}`} 
               message={message} 
               onEditMessage={handleEditMessage}
             />
