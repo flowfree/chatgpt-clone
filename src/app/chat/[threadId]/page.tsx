@@ -24,12 +24,22 @@ export default function Page({
     redirect('/')
   }
 
+  useEffect(() => {
+    const item = localStorage.getItem('NewChat')
+    if (item) {
+      setMessages([JSON.parse(item)])
+      localStorage.removeItem('NewChat')
+    }
+  }, [])
+
   // Fetch all saved messages on page load
   useEffect(() => {
     async function fetchInitialMessages() {
       setMessages(await getMessages(threadId))
     }
-    fetchInitialMessages()
+    setTimeout(() => {
+      fetchInitialMessages()
+    }, 3000)
   }, [threadId]) 
 
   useEffect(() => {
