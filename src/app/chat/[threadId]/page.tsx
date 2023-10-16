@@ -88,6 +88,8 @@ export default function Page({
 
   async function generateCompletion() {
     const role = 'assistant'
+    setMessages(m => [...m, { role: 'assistant', content: '...' }])
+
     setIsStreaming(true)
 
     const response = await fetch('/api/chat', { 
