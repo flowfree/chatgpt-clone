@@ -108,6 +108,7 @@ function ThreadListItem({
   enum Mode {
     Normal,
     Editing,
+    DeleteConfirmation,
     Deleting,
     AutoTyping
   }
@@ -147,6 +148,7 @@ function ThreadListItem({
   }
 
   async function handleDelete() {
+    setMode(Mode.Deleting)
     await deleteThread(id)
     router.push('/chat')
   }
@@ -195,14 +197,14 @@ function ThreadListItem({
             <button onClick={() => setMode(Mode.Editing)}>
               <PencilIcon className="w-4 h-4" />
             </button>
-            <button onClick={() => setMode(Mode.Deleting)}>
+            <button onClick={() => setMode(Mode.DeleteConfirmation)}>
               <TrashIcon className="w-4 h-4" />
             </button>
           </div>
         )}
       </div>
 
-      {mode === Mode.Deleting && (
+      {mode === Mode.DeleteConfirmation && (
         <div className="p-2 m-2 rounded-sm bg-red-100 text-red-900 text-sm">
           <p>
             Chat will be deleted. Are you sure?
@@ -223,6 +225,12 @@ function ThreadListItem({
               Yes
             </button>
           </p>
+        </div>
+      )}
+
+      {mode === Mode.Deleting && (
+        <div className="p-2 m-2 rounded-sm bg-red-100 text-red-900 text-sm">
+          Deleting chat...
         </div>
       )}
     </li>
