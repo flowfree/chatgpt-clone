@@ -75,7 +75,7 @@ export default function Page() {
     const newMessage: Message = { role: 'user', content: question }
 
     localStorage.setItem('NewChat', JSON.stringify(newMessage))
-    setMessages(m => [...m, newMessage])
+    setMessages(m => [...m, newMessage, { role: 'assistant', content: '...' }])
 
     const { success, threadId } = await createThread(question)
     router.push(`/chat/${threadId}`)
@@ -88,7 +88,7 @@ export default function Page() {
           <ul>
             {messages.map((message, index) => (
               <MessageListItem 
-                key={index === 0 ? `0` : `${message.id || index}`} 
+                key={message.id || index} 
                 message={message} 
                 onEditMessage={() => {}}
               />

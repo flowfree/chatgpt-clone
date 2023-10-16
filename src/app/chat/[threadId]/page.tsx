@@ -87,9 +87,6 @@ export default function Page({
   }
 
   async function generateCompletion() {
-    const role = 'assistant'
-    setMessages(m => [...m, { role: 'assistant', content: '...' }])
-
     setIsStreaming(true)
 
     const response = await fetch('/api/chat', { 
@@ -99,6 +96,9 @@ export default function Page({
         messages: messages.map(({ role, content }) => ({ role, content })) 
       })
     })
+
+    const role = 'assistant'
+    setMessages(m => [...m, { role: 'assistant', content: '...' }])
 
     const stream = response.body
     if (stream === null) {
@@ -143,11 +143,19 @@ export default function Page({
         <ul>
           {messages.map((message, index) => (
             <MessageListItem 
-              key={index === 0 ? `0` : `${message.id || index}`} 
+              key={message.id || index} 
               message={message} 
               onEditMessage={handleEditMessage}
             />
           ))}
+
+          {messages.length%2 === 1 && (
+            <MessageListItem 
+              key={`thinking`}
+              message={{ role: 'assistant', content: '...' }}
+              onEditMessage={() => {}}
+            />
+          )}
         </ul>
 
         {error && (
