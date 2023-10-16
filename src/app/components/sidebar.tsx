@@ -116,6 +116,7 @@ function ThreadListItem({
   const [mode, setMode] = useState<Mode>(Mode.Normal)
   const [displayTitle, setDisplayTitle] = useState(title)
   const [editTitle, setEditTitle] = useState(title)
+  const [isDeleted, setIsDeleted] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -149,9 +150,15 @@ function ThreadListItem({
 
   async function handleDelete() {
     setMode(Mode.Deleting)
-    await deleteThread(id)
-    setMode(Mode.Normal)
-    router.push('/chat')
+    const { success } = await deleteThread(id)
+    if (success) {
+      setIsDeleted(true)
+      router.push('/chat')
+    }
+  }
+
+  if (isDeleted) {
+    return null
   }
 
   return (
