@@ -19,7 +19,7 @@ export default function Page({
   const [error, setError] = useState('')
 
   const [displayLoading, setDisplayLoading] = useState(false)
-  const [initialMessagesLoaded, setInitialMessagesLoaded] = useState(false0)
+  const [initialMessagesLoaded, setInitialMessagesLoaded] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
 
   const { data: session } = useSession()
