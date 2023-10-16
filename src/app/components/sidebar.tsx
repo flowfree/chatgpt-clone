@@ -123,7 +123,6 @@ function ThreadListItem({
     async function fetchSuggestionTitle() {
       const { title } = await suggestNewThreadTitle(id)
       if (title) {
-        setDisplayTitle(' ')
         const { success } = await renameThread(id, title) 
         if (success) {
           setDisplayTitle(title)
@@ -200,7 +199,7 @@ function ThreadListItem({
           </div>
         )}
 
-        {mode === Mode.Normal && active && (
+        {mode === Mode.Normal && active && displayTitle !== 'New Chat' && (
           <div className="flex gap-2 items-center">
             <button onClick={() => setMode(Mode.Editing)}>
               <PencilIcon className="w-4 h-4" />
