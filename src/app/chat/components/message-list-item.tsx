@@ -57,12 +57,12 @@ export function MessageListItem({
                 value={editMessage}
                 onChange={e => setEditMessage(e.target.value)}
               />
-            ) : (content ? (
-              <Markdown content={content} />
-            ) : (
+            ) : (content === '' ? (
               <div className="my-4">
                 <BlinkingCursor />
               </div>
+            ) : (
+              <Markdown content={content} />
             ))}
           </div>
           {role === 'user' && isEditing === false && (

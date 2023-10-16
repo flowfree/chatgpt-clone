@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-export function BlinkingCursor({
-  className = ''
-}: {
-  className?: string
-}) {
+export function BlinkingCursor() {
   const [showCursor, setShowCursor] = useState(true)
 
   useEffect(() => {
@@ -20,7 +16,7 @@ export function BlinkingCursor({
   }, [])
 
   return (
-    <span className={`${className} inline-block`}>
+    <span className="inline-block">
       {showCursor ? `_ ` : ` `}
     </span>
   )
