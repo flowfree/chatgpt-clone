@@ -229,7 +229,7 @@ function ThreadListItem({
       )}
 
       {mode === Mode.Deleting && (
-        <div className="p-2 m-2 rounded-sm bg-red-100 text-red-900 text-sm">
+        <div className="p-2 m-2 rounded-sm bg-red-100 text-red-900 text-xs">
           Deleting chat...
         </div>
       )}

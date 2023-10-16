@@ -133,7 +133,7 @@ export default function Page({
 
         {displayLoading && (
           <div className="max-w-sm px-2 py-4 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
-            <span className="italic text-sm">
+            <span className="text-sm">
               Loading...
             </span>
           </div>
