@@ -74,8 +74,8 @@ export default function Page() {
   async function handleSubmit(question: string) {
     const newMessage: Message = { role: 'user', content: question }
 
-    setMessages(m => [...m, newMessage ])
     localStorage.setItem('NewChat', JSON.stringify(newMessage))
+    setMessages(m => [...m, newMessage, { role: 'assistant', content: '...' } ])
 
     const { success, threadId } = await createThread(question)
     router.push(`/chat/${threadId}`)

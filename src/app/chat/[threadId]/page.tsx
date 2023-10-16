@@ -57,6 +57,7 @@ export default function Page({
 
       // Generate chat completion after user submits new question
       if ((messages.length % 2) === 1 && isStreaming === false) {
+        setMessages(m => [...m, { role: 'assistant', content: '...' }])
         generateCompletion()
       }
     }
@@ -87,17 +88,16 @@ export default function Page({
   }
 
   async function generateCompletion() {
+    const role = 'assistant'
     setIsStreaming(true)
 
-    const m = messages.map(({ role, content }) => ({ role, content }))
     const response = await fetch('/api/chat', { 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: m })
+      body: JSON.stringify({ 
+        messages: messages.map(({ role, content }) => ({ role, content })) 
+      })
     })
-
-    const role = 'assistant'
-    setMessages(m => ([...m, { role, content: '...' }]))
 
     const stream = response.body
     if (stream === null) {
