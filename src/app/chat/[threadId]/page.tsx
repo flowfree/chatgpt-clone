@@ -25,19 +25,17 @@ export default function Page({
     redirect('/')
   }
 
-  useEffect(() => {
-    const item = localStorage.getItem('NewChat')
-    if (item) {
-      setMessages([JSON.parse(item)])
-      localStorage.removeItem('NewChat')
-    } else {
-      setIsLoading(true)
-    }
-  }, [])
-
   // Fetch all saved messages on page load
   useEffect(() => {
     async function fetchInitialMessages() {
+      const item = localStorage.getItem('NewChat')
+      if (item) {
+        setMessages([JSON.parse(item)])
+        localStorage.removeItem('NewChat')
+      } else {
+        setIsLoading(true)
+      }
+
       try {
         setMessages(await getMessages(threadId))
       } finally {
@@ -129,7 +127,7 @@ export default function Page({
 
         {isLoading && (
           <div className="max-w-sm px-2 py-4 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
-            <span className="italic">
+            <span className="italic text-sm">
               Loading...
             </span>
           </div>
