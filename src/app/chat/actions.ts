@@ -109,7 +109,7 @@ export async function suggestNewThreadTitle(threadId: string) {
   const content = `Extract suitable title for a chat, make it short and concise with a maximum of 5 words. Don't use any emoticons or wrap it in double quotes. The first message from the user is:\n\n${message.content}`
   const completion = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo-16k',
-    temperature: 0.7,
+    temperature: 0,
     messages: [{ role: 'user', content }]
   })
 

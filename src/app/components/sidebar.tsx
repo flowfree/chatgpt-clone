@@ -40,6 +40,12 @@ export function Sidebar({
       const { threads } = await getThreads()
       if (threads) {
         setThreads(threads)
+        document.title = 'New Chat'
+        threads.map(t => {
+          if (t.id === currentThreadId) {
+            document.title = t.title
+          }
+        })
       }
     }
     session && fetchAllThreads()
@@ -133,17 +139,19 @@ function ThreadListItem({
         }
       }
     }
+
     if (active && displayTitle === 'New Chat') {
       fetchSuggestionTitle()
     }
-  }, [])
+  }, [active, displayTitle])
 
   async function handleRename(e?: React.FormEvent) {
     if (e) {
       e.preventDefault()
     }
     const { success } = await renameThread(id, editTitle) 
-    setDisplayTitle(success ? editTitle : title)
+    setDisplayTitle(editTitle)
+    document.title = editTitle
     setMode(Mode.Normal)
   }
 
@@ -178,7 +186,10 @@ function ThreadListItem({
           <TypeWriter 
             text={displayTitle} 
             runIndefinitely={false} 
-            onCompleted={() => setMode(Mode.Normal)}
+            onCompleted={() => {
+              setMode(Mode.Normal)
+              document.title = displayTitle
+            }}
           />
         ) : (
           <Link href={`/chat/${id}`} className="grow line-clamp-1" title={displayTitle}>
