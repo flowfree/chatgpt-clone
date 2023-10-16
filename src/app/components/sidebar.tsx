@@ -169,6 +169,7 @@ function ThreadListItem({
           <TypeWriter 
             text={displayTitle} 
             runIndefinitely={false} 
+            initialDelay={100}
             onCompleted={() => setMode(Mode.Normal)}
           />
         ) : (
