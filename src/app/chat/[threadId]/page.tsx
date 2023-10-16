@@ -30,6 +30,8 @@ export default function Page({
     if (item) {
       setMessages([JSON.parse(item)])
       localStorage.removeItem('NewChat')
+    } else {
+      setIsLoading(true)
     }
   }, [])
 
@@ -37,7 +39,6 @@ export default function Page({
   useEffect(() => {
     async function fetchInitialMessages() {
       try {
-        setIsLoading(true)
         setMessages(await getMessages(threadId))
       } finally {
         setIsLoading(false)
