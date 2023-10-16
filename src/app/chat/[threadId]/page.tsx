@@ -16,6 +16,7 @@ export default function Page({
   params: { threadId: string }
 }) {
   const [messages, setMessages] = useState<Message[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState('')
 
@@ -35,11 +36,15 @@ export default function Page({
   // Fetch all saved messages on page load
   useEffect(() => {
     async function fetchInitialMessages() {
-      setMessages(await getMessages(threadId))
+      try {
+        setIsLoading(true)
+        setMessages(await getMessages(threadId))
+      } finally {
+        setIsLoading(false)
+      }
     }
-    setTimeout(() => {
-      fetchInitialMessages()
-    }, 3000)
+
+    fetchInitialMessages()
   }, [threadId]) 
 
   useEffect(() => {
@@ -120,6 +125,15 @@ export default function Page({
   return (
     <div className="relative">
       <div className="w-content pb-32">
+
+        {isLoading && (
+          <div className="max-w-sm px-2 py-4 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
+            <span className="italic">
+              Loading...
+            </span>
+          </div>
+        )}        
+
         <ul>
           {messages.map((message, index) => (
             <MessageListItem 
@@ -129,6 +143,7 @@ export default function Page({
             />
           ))}
         </ul>
+
         {error && (
           <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
             <AlertError>{error}</AlertError>
