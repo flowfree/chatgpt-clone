@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { redirect, useRouter } from 'next/navigation'
 
+import { type Message } from '@/app/lib/types'
 import { createThread } from './actions'
-import { QuestionForm } from './components'
+import { QuestionForm, MessageListItem } from './components'
 
 interface SamplePrompt {
   title: string
@@ -56,6 +57,7 @@ const prompts: SamplePrompt[] = [{
 }]
 
 export default function Page() {
+  const [messages, setMessages] = useState<Message[]>([])
   const [samplePrompts, setSamplePrompts] = useState<SamplePrompt[]>([])
   const router = useRouter()
 
@@ -70,6 +72,7 @@ export default function Page() {
   }, [])
 
   async function handleSubmit(question: string) {
+    setMessages(m => [...m, { role: 'user', content: question }])
     const { success, message, threadId } = await createThread(question)
     router.push(`/chat/${threadId}`)
   }
@@ -77,33 +80,47 @@ export default function Page() {
   return (
     <div className="relative">
       <div className="w-content pb-32">
-        <h2 className="mt-8 text-center text-3xl font-bold tracking-tight text-gray-300">
-          ChatGPT clone
-        </h2>
+        {messages ? (
+          <ul>
+            {messages.map((message, index) => (
+              <MessageListItem 
+                key={index === 0 ? `0` : `${message.id || index}`} 
+                message={message} 
+                onEditMessage={() => {}}
+              />
+            ))}
+          </ul>
+        ) : (
+          <h2 className="mt-8 text-center text-3xl font-bold tracking-tight text-gray-300">
+            ChatGPT clone
+          </h2>
+        )}
       </div>
 
       <div className="fixed w-full bottom-0 left-0 flex">
         <div className="hidden lg:block lg:basis-1/6" />
         <div className="flex-1 lg:basis-5/6">
           <div className="mb-8 max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {samplePrompts.map((prompt, index) => (
-                <li 
-                  key={index} 
-                  className="py-2 px-4 border rounded-lg border-gray-200 cursor-pointer"
-                  onClick={() => handleSubmit(prompt.message)}
-                >
-                  <div className="text-sm">
-                    <h3 className="text-gray-900 font-bold">
-                      {prompt.title}
-                    </h3>
-                    <p className="text-gray-400 line-clamp-1">
-                      {prompt.subtitle}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {messages.length === 0 && (
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {samplePrompts.map((prompt, index) => (
+                  <li 
+                    key={index} 
+                    className="py-2 px-4 border rounded-lg border-gray-200 cursor-pointer"
+                    onClick={() => handleSubmit(prompt.message)}
+                  >
+                    <div className="text-sm">
+                      <h3 className="text-gray-900 font-bold">
+                        {prompt.title}
+                      </h3>
+                      <p className="text-gray-400 line-clamp-1">
+                        {prompt.subtitle}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="w-full bg-white">

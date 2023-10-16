@@ -51,7 +51,7 @@ export function TypeWriter({
     }, speed)
 
     return () => clearTimeout(timer)
-  }, [currentIndex])
+  }, [text, currentIndex])
 
   useEffect(() => {
     if (showCursor && blinkingCursor) {
