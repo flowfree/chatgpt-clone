@@ -16,9 +16,11 @@ export default function Page({
   params: { threadId: string }
 }) {
   const [messages, setMessages] = useState<Message[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState('')
+
+  const [displayLoading, setDisplayLoading] = useState(false)
+  const [initialMessagesLoaded, setInitialMessagesLoaded] = useState(false0)
+  const [isStreaming, setIsStreaming] = useState(false)
 
   const { data: session } = useSession()
   if (!session) {
@@ -33,13 +35,14 @@ export default function Page({
         setMessages([JSON.parse(item)])
         localStorage.removeItem('NewChat')
       } else {
-        setIsLoading(true)
+        setDisplayLoading(true)
       }
 
       try {
         setMessages(await getMessages(threadId))
       } finally {
-        setIsLoading(false)
+        setDisplayLoading(false)
+        setInitialMessagesLoaded(true)
       }
     }
 
@@ -47,14 +50,17 @@ export default function Page({
   }, [threadId]) 
 
   useEffect(() => {
-    // Always scroll to the bottom of the page on each message changes
-    document.documentElement.scrollTop = document.documentElement.scrollHeight;
-    document.body.scrollTop = document.body.scrollHeight;
+    if (initialMessagesLoaded) {
+      // Always scroll to the bottom of the page on each message changes
+      document.documentElement.scrollTop = document.documentElement.scrollHeight;
+      document.body.scrollTop = document.body.scrollHeight;
 
-    if ((messages.length % 2) === 1 && isStreaming === false) {
-      generateCompletion()
+      // Generate chat completion after user submits new question
+      if ((messages.length % 2) === 1 && isStreaming === false) {
+        generateCompletion()
+      }
     }
-  }, [messages, isStreaming])
+  }, [initialMessagesLoaded, messages, isStreaming])
 
   async function handleUserMessage(content: string) {
     const role = 'user'
@@ -125,7 +131,7 @@ export default function Page({
     <div className="relative">
       <div className="w-content pb-32">
 
-        {isLoading && (
+        {displayLoading && (
           <div className="max-w-sm px-2 py-4 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
             <span className="italic text-sm">
               Loading...
