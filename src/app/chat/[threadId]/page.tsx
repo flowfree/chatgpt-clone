@@ -65,9 +65,9 @@ export default function Page({
   }
 
   async function handleEditMessage(id: string, content: string) {
-    await deleteMessage(id)
     const index = messages.findIndex(m => m.id === id)
     setMessages(m => [...m.slice(0, index)])
+    await deleteMessage(id)
     handleUserMessage(content)
   }
 
