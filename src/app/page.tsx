@@ -9,12 +9,20 @@ import { TypeWriter } from '@/app/components'
 
 const prompts = [
   'Plan a trip - to see the northern lights in Norway',
+  'Plan a trip - to experience Seoul like a local',
+  'Help me pick - a gift for my dad who loves fishing',
+  'Improve my post - for selling a used vacuum in good condition',
+  'Improve my post - for hiring a store associate',
+  'Give me ideas - for a customer loyalty program in a small bookstore',
+  'Give me ideas - for what to do with my kid\'s art',
   'Suggest fun activities - for a team-building day with remote employees',
+  'Suggest fun activities - for a family of 4 to do indoors on a rainy day',
   'Draft an email - requesting a deadline extension for my project',
   'Help me debug - a Python script automating daily reports',
   'Help me debug - Why the linked list appears empty after I\'ve reversed it',
   'Summarize this article - into three keypoints',
   'Summarize this article - as a table of pros and cons',
+  '',
 ]
 
 export default function Page() {

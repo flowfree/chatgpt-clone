@@ -30,7 +30,7 @@ export default function Page({
       setMessages(await getMessages(threadId))
     }
     fetchInitialMessages()
-  }, []) 
+  }, [threadId]) 
 
   useEffect(() => {
     // Always scroll to the bottom of the page on each message changes
