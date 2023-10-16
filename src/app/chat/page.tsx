@@ -75,7 +75,7 @@ export default function Page() {
     const newMessage: Message = { role: 'user', content: question }
 
     localStorage.setItem('NewChat', JSON.stringify(newMessage))
-    setMessages(m => [...m, newMessage, { role: 'assistant', content: '...' } ])
+    setMessages(m => [...m, newMessage])
 
     const { success, threadId } = await createThread(question)
     router.push(`/chat/${threadId}`)
