@@ -57,7 +57,6 @@ export default function Page({
 
       // Generate chat completion after user submits new question
       if ((messages.length % 2) === 1 && isStreaming === false) {
-        setMessages(m => [...m, { role: 'assistant', content: '...' }])
         generateCompletion()
       }
     }

@@ -150,6 +150,7 @@ function ThreadListItem({
   async function handleDelete() {
     setMode(Mode.Deleting)
     await deleteThread(id)
+    setMode(Mode.Normal)
     router.push('/chat')
   }
 
