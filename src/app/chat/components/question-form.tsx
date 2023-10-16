@@ -12,6 +12,10 @@ export function QuestionForm({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
+    autoResizeTextarea()
+  }, [textareaRef])
+
+  useEffect(() => {
     if (question === '' && textareaRef.current) {
       textareaRef.current.style.height = 'auto'
     }
@@ -28,8 +32,17 @@ export function QuestionForm({
     const { value } = e.target
     setQuestion(value)
     if (value) {
-      e.target.style.height = 'auto'; 
-      e.target.style.height = Math.min(e.target.scrollHeight, 200) + 'px'
+      autoResizeTextarea()
+    }
+  }
+
+  function autoResizeTextarea() {
+    if (textareaRef.current) {
+      const t = textareaRef.current
+      t.style.height = 'auto' 
+      t.style.overflow = 'scroll'
+      t.style.height = Math.min(t.scrollHeight, 200) + 'px'
+      t.style.overflow = 'hidden'
     }
   }
 
