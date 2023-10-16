@@ -7,7 +7,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/solid'
 
 import { getMessages, addMessage, deleteMessage } from '../actions'
 import { type Message } from '@/app/lib/types'
-import { AlertError } from '@/app/components'
+import { BlinkingCursor, AlertError } from '@/app/components'
 import { MessageListItem, QuestionForm } from '../components'
 
 export default function Page({ 
@@ -152,7 +152,7 @@ export default function Page({
           {messages.length%2 === 1 && (
             <MessageListItem 
               key={`thinking`}
-              message={{ role: 'assistant', content: '...' }}
+              message={{ role: 'assistant', content: '' }}
               onEditMessage={() => {}}
             />
           )}

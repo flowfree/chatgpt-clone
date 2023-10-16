@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { Message } from '@/app/lib/types'
-import { Avatar } from '@/app/components'
+import { Avatar, BlinkingCursor } from '@/app/components'
 import { Markdown } from './markdown'
 import { PencilIcon } from '@heroicons/react/24/outline'
 
@@ -57,9 +57,13 @@ export function MessageListItem({
                 value={editMessage}
                 onChange={e => setEditMessage(e.target.value)}
               />
-            ) : (
+            ) : (content ? (
               <Markdown content={content} />
-            )}
+            ) : (
+              <div className="my-4">
+                <BlinkingCursor />
+              </div>
+            ))}
           </div>
           {role === 'user' && isEditing === false && (
             <div className="mt-4 w-content shrink-0">
