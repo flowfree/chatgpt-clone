@@ -146,9 +146,21 @@ export async function addMessage(threadId: string, role: 'user' | 'assistant', c
 }
 
 /**
- * Delete a message
+ * Delete a single message
  */
 export async function deleteMessage(id: string) {
+  try {
+    await prisma.message.delete({ where: { id } })
+    return { success: true }
+  } catch (err) {
+    return { success: false }
+  }
+}
+
+/**
+ * Delete a message and its children
+ */
+export async function deleteMessagesStartingFrom(id: string) {
   try {
     const message = await prisma.message.findFirst({ where: { id } })
     if (message) {

@@ -5,9 +5,14 @@ import { redirect } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { ArrowPathIcon } from '@heroicons/react/24/solid'
 
-import { getMessages, addMessage, deleteMessage } from '../actions'
+import { 
+  getMessages, 
+  addMessage, 
+  deleteMessage,
+  deleteMessagesStartingFrom 
+} from '../actions'
 import { type Message } from '@/app/lib/types'
-import { BlinkingCursor, AlertError } from '@/app/components'
+import { AlertError } from '@/app/components'
 import { MessageListItem, QuestionForm } from '../components'
 
 export default function Page({ 
@@ -21,6 +26,7 @@ export default function Page({
   const [displayLoading, setDisplayLoading] = useState(false)
   const [initialMessagesLoaded, setInitialMessagesLoaded] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
+  const [autoScroll, setAutoScroll] = useState(true)
 
   const { data: session } = useSession()
   if (!session) {
@@ -49,18 +55,24 @@ export default function Page({
     fetchInitialMessages()
   }, [threadId]) 
 
+  // After the user submits their question, trigger the generate chat completion
   useEffect(() => {
     if (initialMessagesLoaded) {
-      // Always scroll to the bottom of the page on each message changes
-      document.documentElement.scrollTop = document.documentElement.scrollHeight;
-      document.body.scrollTop = document.body.scrollHeight;
-
-      // Generate chat completion after user submits new question
+      // Check if user has submitted their question
       if ((messages.length % 2) === 1 && isStreaming === false) {
+        setAutoScroll(true)
         generateCompletion()
       }
     }
   }, [initialMessagesLoaded, messages, isStreaming])
+
+  // Scroll to the bottom of the page on each message changes
+  useEffect(() => {
+    if (autoScroll) {
+      document.documentElement.scrollTop = document.documentElement.scrollHeight;
+      document.body.scrollTop = document.body.scrollHeight;
+    }
+  }, [messages, autoScroll])
 
   async function handleUserMessage(content: string) {
     const role = 'user'
@@ -73,8 +85,27 @@ export default function Page({
   async function handleEditMessage(id: string, content: string) {
     const index = messages.findIndex(m => m.id === id)
     setMessages(m => [...m.slice(0, index)])
-    await deleteMessage(id)
+    await deleteMessagesStartingFrom(id)
     handleUserMessage(content)
+  }
+
+  async function handleDeleteMessage(id: string) {
+    const index = messages.findIndex(m => m.id === id)
+
+    let nextMessage: Message | null = null
+    if (index < messages.length - 1) {
+      nextMessage = messages[index+1]
+    }
+
+    setMessages(m => {
+      setAutoScroll(false)
+      return [...m.slice(0, index), ...m.slice(index+2)]
+    })
+
+    await deleteMessage(id)
+    if (nextMessage && nextMessage.id) {
+      await deleteMessage(nextMessage.id)
+    }
   }
 
   async function handleRegenerateCompletion() {
@@ -146,6 +177,7 @@ export default function Page({
               key={message.id || index} 
               message={message} 
               onEditMessage={handleEditMessage}
+              onDeleteMessage={handleDeleteMessage}
             />
           ))}
 
@@ -153,7 +185,6 @@ export default function Page({
             <MessageListItem 
               key={`thinking`}
               message={{ role: 'assistant', content: '' }}
-              onEditMessage={() => {}}
             />
           )}
         </ul>
