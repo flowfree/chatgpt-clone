@@ -3,37 +3,53 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { Message } from '@/app/lib/types'
-import { Avatar, BlinkingCursor } from '@/app/components'
+import { Avatar, BlinkingCursor, AlertConfirm, AlertWarning } from '@/app/components'
 import { Markdown } from './markdown'
-import { PencilIcon } from '@heroicons/react/24/outline'
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 export function MessageListItem({
   message,
-  onEditMessage
+  onEditMessage,
+  onDeleteMessage
 }: {
-  message: Message,
-  onEditMessage: (id: string, question: string) => void
+  message: Message
+  onEditMessage?: (id: string, question: string) => void
+  onDeleteMessage?: (id: string) => void
 }) {
+  enum Mode {
+    Normal,
+    Editing,
+    ConfirmDeletion,
+    Deleting,
+  }
+
   const { id, role, content } = message
 
   const [editMessage, setEditMessage] = useState(content)
-  const [isEditing, setIsEditing] = useState(false)
+  const [mode, setMode] = useState<Mode>(Mode.Normal)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const { data: session } = useSession()
 
   useEffect(() => {
-    if (isEditing === true && inputRef.current) {
+    if (mode === Mode.Editing && inputRef.current) {
       inputRef.current.style.height = 'auto'
       inputRef.current.style.height = inputRef.current.scrollHeight + 'px'
-    } else if (isEditing === false) {
+    } else if (mode === Mode.Normal) {
       setEditMessage(content)
     }
-  }, [isEditing, editMessage])
+  }, [mode, editMessage])
 
-  function handleSubmit() {
-    setIsEditing(false)
-    if (id) {
+  function handleEditMessage() {
+    setMode(Mode.Normal)
+    if (id && onEditMessage) {
       onEditMessage(id, editMessage)
+    }
+  }
+
+  function handleDeleteMessage() {
+    setMode(Mode.Deleting)
+    if (id && onDeleteMessage) {
+      onDeleteMessage(id)
     }
   }
 
@@ -49,7 +65,17 @@ export function MessageListItem({
         </div>
         <div className="grow overflow-auto flex flex-row gap-2">
           <div className="grow w-full">
-            {isEditing ? (
+            {mode === Mode.Normal && (
+              content === '' ? (
+                <div className="my-4">
+                  <BlinkingCursor />
+                </div>
+              ) : (
+                <Markdown content={content} />
+              )
+            )}
+
+            {mode === Mode.Editing && (
               <textarea 
                 ref={inputRef}
                 rows={1}
@@ -57,38 +83,61 @@ export function MessageListItem({
                 value={editMessage}
                 onChange={e => setEditMessage(e.target.value)}
               />
-            ) : (content === '' ? (
-              <div className="my-4">
-                <BlinkingCursor />
-              </div>
-            ) : (
-              <Markdown content={content} />
-            ))}
+            )}
+
+            {mode === Mode.ConfirmDeletion && (
+              <>
+                <Markdown content={content} />
+                <AlertConfirm 
+                  className="my-4 text-sm"
+                  onCancel={() => setMode(Mode.Normal)}
+                  onConfirm={handleDeleteMessage}
+                >
+                  This message will be deleted. Are you sure?
+                </AlertConfirm>
+              </>
+            )}
+
+            {mode === Mode.Deleting && (
+              <>
+                <Markdown content={content} />
+                <AlertWarning className="my-4 text-sm">
+                  Deleting...
+                </AlertWarning>
+              </>
+            )}
           </div>
-          {role === 'user' && isEditing === false && (
+
+          {role === 'user' && mode === Mode.Normal && (
             <div className="mt-4 w-content shrink-0">
               <button
                 className="invisible group-hover:visible p-1 rounded-md bg-white hover:bg-gray-200"
-                onClick={() => setIsEditing(true)}
+                onClick={() => setMode(Mode.Editing)}
               >
                 <PencilIcon className="w-4 h-4" />
+              </button>
+              <button
+                className="invisible group-hover:visible p-1 rounded-md bg-white hover:bg-gray-200"
+                onClick={() => setMode(Mode.ConfirmDeletion)}
+              >
+                <TrashIcon className="w-4 h-4" />
               </button>
             </div>
           )}
         </div>
       </div>
 
-      {isEditing && (
+      {mode === Mode.Editing && (
         <div className="mb-4 max-w-sm text-sm sm:text-base sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex gap-4 justify-center">
           <button 
             className="py-2 px-4 rounded-md bg-indigo-700 hover:bg-indigo-600 text-white text-sm"
-            onClick={handleSubmit}
+            onClick={handleEditMessage}
           >
             Save &amp; Submit
           </button>
           <button 
             className="py-2 px-4 rounded-md border border-gray-300 hover:text-gray-700 text-sm"
-            onClick={() => setIsEditing(false)}
+            onClick={() => setMode(Mode.Normal)}
           >
             Cancel
           </button>
