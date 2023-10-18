@@ -23,12 +23,12 @@ export function MessageListItem({
     Deleting,
   }
 
-  const { id, role, content } = message
-
   const [editMessage, setEditMessage] = useState(content)
   const [mode, setMode] = useState<Mode>(Mode.Normal)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const { data: session } = useSession()
+
+  const { id, role, content } = message
 
   useEffect(() => {
     if (mode === Mode.Editing && inputRef.current) {
