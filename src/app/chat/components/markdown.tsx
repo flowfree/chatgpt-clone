@@ -33,7 +33,7 @@ export function Markdown({
         code: ({ node, className, children, ...props }) => {
           const match = /language-(\w+)/.exec(className || "");
           return match ? (
-            <CodeBlock language={match[1]}>
+            <CodeBlock language={match[1]} className="my-4">
               {children}
             </CodeBlock>
           ) : (
