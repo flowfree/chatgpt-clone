@@ -1,4 +1,5 @@
 import OpenAI from 'openai'
+import { NextResponse } from 'next/server'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 
 const openai = new OpenAI({
@@ -18,7 +19,9 @@ export async function POST(request: Request) {
     })
     const stream = OpenAIStream(chatCompletion)
     return new StreamingTextResponse(stream)
-  } catch (error) {
-    console.error(`Error communicating wih OpenAI: ${error}`)
+  } catch (err) {
+    const error = `Error communicating wih OpenAI: ${err}`
+    console.error(error)
+    return NextResponse.json({ error }, { status: 500 })
   }
 }
