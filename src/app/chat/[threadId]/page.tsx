@@ -128,6 +128,12 @@ export default function Page({
       })
     })
 
+    if (response.status === 500) {
+      const { error } = await response.json()
+      setError(error)
+      return
+    }
+
     const role = 'assistant'
     setMessages(m => [...m, { role: 'assistant', content: '...' }])
 
