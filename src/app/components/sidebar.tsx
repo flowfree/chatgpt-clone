@@ -57,7 +57,7 @@ export function Sidebar({
       }
     }
     session && fetchAllThreads()
-  }, [pathname])
+  }, [pathname, showSidebar])
 
   useEffect(() => {
     function handleResize() {
