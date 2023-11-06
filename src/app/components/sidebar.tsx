@@ -35,7 +35,7 @@ export function Sidebar({
   mobile?: boolean
   desktop?: boolean
 }) {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+  const [isMobile, setIsMobile] = useState(true)
   const [showSidebar, setShowSidebar] = useState(true)
   const [threads, setThreads] = useState<Thread[]>([])
   const pathname = usePathname()
