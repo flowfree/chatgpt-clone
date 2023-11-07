@@ -82,28 +82,15 @@ export default function Page() {
   }
 
   return (
-    <div className="relative">
-      <div className="w-content pb-32">
-        {messages.length ? (
-          <ul>
-            {messages.map((message, index) => (
-              <MessageListItem 
-                key={message.id || index} 
-                message={message} 
-                onEditMessage={() => {}}
-              />
-            ))}
-          </ul>
-        ) : (
-          <h2 className="mt-8 text-center text-3xl font-bold tracking-tight text-gray-300">
-            ChatGPT clone
-          </h2>
-        )}
+    <>
+      <div className="grow pt-8 pb-32 md:pt-0">
+        <h2 className="mt-8 text-center text-3xl font-bold tracking-tight text-gray-300">
+          ChatGPT clone
+        </h2>
       </div>
 
-      <div className="fixed w-full bottom-0 left-0 flex">
-        <div className="hidden lg:block lg:basis-1/6" />
-        <div className="flex-1 lg:basis-5/6">
+      <div className="sticky w-content bottom-0">
+        <div className="max-w-3xl mx-auto">
           <div className="mb-8 max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
             {messages.length === 0 && (
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -126,7 +113,6 @@ export default function Page() {
               </ul>
             )}
           </div>
-
           <div className="w-full bg-white">
             <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto pb-4">
               <QuestionForm onSubmit={handleSubmit} />
@@ -134,6 +120,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

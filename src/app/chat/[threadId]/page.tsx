@@ -166,65 +166,62 @@ export default function Page({
   }
 
   return (
-    <div className="relative">
-      <div className="w-content pb-32">
+    <>
+      <div className="grow pt-8 -mb-4 md:pt-0">
+        <div className="w-content">
+          {displayLoading && (
+            <div className="max-w-sm px-2 py-4 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
+              <span className="text-sm">
+                Loading...
+              </span>
+            </div>
+          )}        
 
-        {displayLoading && (
-          <div className="max-w-sm px-2 py-4 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
-            <span className="text-sm">
-              Loading...
-            </span>
-          </div>
-        )}        
+          <ul>
+            {messages.map((message, index) => (
+              <MessageListItem 
+                key={message.id || index} 
+                message={message} 
+                onEditMessage={handleEditMessage}
+                onDeleteMessage={handleDeleteMessage}
+              />
+            ))}
+            {messages.length%2 === 1 && (
+              <MessageListItem 
+                key={`thinking`}
+                message={{ role: 'assistant', content: '' }}
+              />
+            )}
+          </ul>
 
-        <ul>
-          {messages.map((message, index) => (
-            <MessageListItem 
-              key={message.id || index} 
-              message={message} 
-              onEditMessage={handleEditMessage}
-              onDeleteMessage={handleDeleteMessage}
-            />
-          ))}
-
-          {messages.length%2 === 1 && (
-            <MessageListItem 
-              key={`thinking`}
-              message={{ role: 'assistant', content: '' }}
-            />
+          {error && (
+            <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
+              <AlertError>{error}</AlertError>
+            </div>
           )}
-        </ul>
-
-        {error && (
-          <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
-            <AlertError>{error}</AlertError>
-          </div>
-        )}
+        </div>
       </div>
 
-      <div className="fixed w-full bottom-0 left-0 flex">
-        <div className="hidden lg:block lg:basis-1/6" />
-        <div className="flex-1 lg:basis-5/6">
-          <div className="w-full h-12 bg-gradient-to-t from-white to-transparent">
-            <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex flex-row-reverse">
-              {isStreaming === false && messages.length > 1 && messages.length % 2 === 0 && (
-                <button
-                  className="p-2 border border-gray-300 text-sm text-gray-600 bg-white hover:bg-gray-50 flex items-center gap-2"
-                  onClick={handleRegenerateCompletion}
-                >
-                  <ArrowPathIcon className="w-4 h-4" />
-                  Regenerate
-                </button>
-              )}
-            </div>
+      <div className="sticky w-content bottom-0">
+        <div className="w-full h-12 bg-gradient-to-t from-white to-transparent">
+          <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto flex flex-row-reverse">
+            {isStreaming === false && messages.length > 1 && messages.length % 2 === 0 && (
+              <button
+                className="p-2 border border-gray-300 text-sm text-gray-600 bg-white hover:bg-gray-50 flex items-center gap-2"
+                onClick={handleRegenerateCompletion}
+              >
+                <ArrowPathIcon className="w-4 h-4" />
+                Regenerate
+              </button>
+            )}
           </div>
-          <div className="w-full bg-white">
-            <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto pb-4">
-              <QuestionForm onSubmit={handleUserMessage} />
-            </div>
+        </div>
+        <div className="w-full bg-white">
+          <div className="max-w-sm px-2 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto pb-4">
+            <QuestionForm onSubmit={handleUserMessage} />
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

@@ -27,16 +27,12 @@ export default async function RootLayout({
       <body className={`${inter.className} w-full h-screen antialiased`}>
         <SessionProvider session={session}>
           {session ? (
-            <div className="w-full flex">
-              <div className="hidden lg:block lg:basis-1/6">
-                <div className="sticky top-0 left-0 h-screen z-10">
-                  <Sidebar />
-                </div>
+            <div className="flex flex-row min-h-screen">
+              <div className="hidden sm:block shrink-0">
+                <Sidebar desktop={true} />
               </div>
-              <div className="mt-10 sm:mt-0 flex-1 lg:basis-5/6">
+              <div className="grow flex flex-col">
                 {children}
-              </div>
-              <div className="block sm:hidden">
                 <TopNav />
               </div>
             </div>
