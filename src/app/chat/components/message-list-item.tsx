@@ -63,7 +63,7 @@ export function MessageListItem({
             image={session?.user?.image}
           />
         </div>
-        <div className="grow overflow-auto flex flex-row gap-2">
+        <div className="relative grow overflow-auto sm:overflow-visible flex flex-row gap-2">
           <div className="grow w-full">
             {mode === Mode.Normal && (
               content === '' ? (
@@ -109,7 +109,7 @@ export function MessageListItem({
           </div>
 
           {role === 'user' && mode === Mode.Normal && (
-            <div className="mt-4 w-content shrink-0">
+            <div className="absolute top-0 right-0 transform -translate-y-[18px] sm:translate-x-full sm:translate-y-0 mt-4 w-content shrink-0">
               <button
                 className="invisible group-hover:visible p-1 rounded-md bg-white hover:bg-gray-200"
                 onClick={() => setMode(Mode.Editing)}
