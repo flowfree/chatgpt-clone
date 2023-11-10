@@ -109,7 +109,7 @@ export function MessageListItem({
           </div>
 
           {role === 'user' && mode === Mode.Normal && (
-            <div className="absolute top-0 right-0 transform -translate-y-[18px] sm:translate-x-full sm:translate-y-0 mt-4 w-content shrink-0">
+            <div className="absolute top-0 right-0 transform -translate-y-[18px] -sm:translate-y-full mt-4 w-content shrink-0">
               <button
                 className="invisible group-hover:visible p-1 rounded-md bg-white hover:bg-gray-200"
                 onClick={() => setMode(Mode.Editing)}
