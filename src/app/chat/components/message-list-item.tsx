@@ -63,7 +63,7 @@ export function MessageListItem({
             image={session?.user?.image}
           />
         </div>
-        <div className="relative grow overflow-auto sm:overflow-visible flex flex-row gap-2">
+        <div className="relative grow overflow-auto sm:overflow-hidden flex flex-row gap-2">
           <div className="grow w-full">
             {mode === Mode.Normal && (
               content === '' ? (
