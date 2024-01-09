@@ -146,6 +146,21 @@ export async function addMessage(threadId: string, role: 'user' | 'assistant', c
 }
 
 /**
+ * Update a single message
+ */
+export async function updateMessage(id: string, content: string) {
+  try {
+    await prisma.message.update({
+      where: { id },
+      data: { content }
+    })
+    return { success: true }
+  } catch (err) {
+    return { success: false }
+  }
+}
+
+/**
  * Delete a single message
  */
 export async function deleteMessage(id: string) {

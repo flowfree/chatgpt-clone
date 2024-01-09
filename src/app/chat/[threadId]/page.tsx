@@ -8,6 +8,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/solid'
 import { 
   getMessages, 
   addMessage, 
+  updateMessage,
   deleteMessage,
   deleteMessagesStartingFrom 
 } from '../actions'
@@ -84,9 +85,17 @@ export default function Page({
 
   async function handleEditMessage(id: string, content: string) {
     const index = messages.findIndex(m => m.id === id)
-    setMessages(m => [...m.slice(0, index)])
-    await deleteMessagesStartingFrom(id)
-    handleUserMessage(content)
+
+    if (messages[index].role === 'user') {
+      setMessages(m => [...m.slice(0, index)])
+      await deleteMessagesStartingFrom(id)
+      handleUserMessage(content)
+    } else {
+      const { success } = await updateMessage(id, content)
+      if (success) {
+        setMessages(m => m.map(item => item.id === id ? { ...item, content } : item))
+      }
+    }
   }
 
   async function handleDeleteMessage(id: string) {
