@@ -34,6 +34,7 @@ export function MessageListItem({
     if (mode === Mode.Editing && inputRef.current) {
       inputRef.current.style.height = 'auto'
       inputRef.current.style.height = inputRef.current.scrollHeight + 'px'
+      inputRef.current.focus()
     } else if (mode === Mode.Normal) {
       setEditMessage(content)
     }
@@ -79,7 +80,7 @@ export function MessageListItem({
               <textarea 
                 ref={inputRef}
                 rows={1}
-                className="my-4 w-full outline-none border-0 resize-none"
+                className="my-4 w-full outline-none border-0 resize-none bg-white"
                 value={editMessage}
                 onChange={e => setEditMessage(e.target.value)}
               />
@@ -108,20 +109,22 @@ export function MessageListItem({
             )}
           </div>
 
-          {role === 'user' && mode === Mode.Normal && (
+          {mode === Mode.Normal && (
             <div className="absolute top-0 right-0 transform -translate-y-[18px] -sm:translate-y-full mt-4 w-content shrink-0">
               <button
-                className="invisible group-hover:visible p-1 rounded-md bg-white hover:bg-gray-200"
+                className="invisible group-hover:visible p-1 rounded-md bg-transparent hover:bg-gray-200"
                 onClick={() => setMode(Mode.Editing)}
               >
                 <PencilIcon className="w-4 h-4" />
               </button>
-              <button
-                className="invisible group-hover:visible p-1 rounded-md bg-white hover:bg-gray-200"
-                onClick={() => setMode(Mode.ConfirmDeletion)}
-              >
-                <TrashIcon className="w-4 h-4" />
-              </button>
+              {role === 'user' && (
+                <button
+                  className="invisible group-hover:visible p-1 rounded-md bg-transparent hover:bg-gray-200"
+                  onClick={() => setMode(Mode.ConfirmDeletion)}
+                >
+                  <TrashIcon className="w-4 h-4" />
+                </button>
+              )}
             </div>
           )}
         </div>
