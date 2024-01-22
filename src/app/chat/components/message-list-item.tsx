@@ -88,7 +88,6 @@ export function MessageListItem({
 
             {mode === Mode.ConfirmDeletion && (
               <>
-                <Markdown content={content} />
                 <AlertConfirm 
                   className="my-4 text-sm"
                   onCancel={() => setMode(Mode.Normal)}
@@ -96,6 +95,7 @@ export function MessageListItem({
                 >
                   This message will be deleted. Are you sure?
                 </AlertConfirm>
+                <Markdown content={content} />
               </>
             )}
 
