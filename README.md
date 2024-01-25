@@ -1,26 +1,27 @@
 ChatGPT Clone
 =============
-This is a ChatGPT clone built with [Next.js](https://nextjs.org/). 
+A ChatGPT clone built with [Next.js](https://nextjs.org/) and [Vercel AI SDK](https://sdk.vercel.ai/docs). 
 
 
-## Getting Started
-First, run the development server:
+## Running on development machine
+After cloning this repo, follow these steps:
 
-```bash
-npm run dev
-```
+1.  Create a new PostgreSQL database.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1.  Copy the `.env.local_sample` to `.env.local` and fill in all of the values.
 
+1.  Install the dependencies:
 
-## Learn More
-To learn more, take a look at the following resources:
+        npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Vercel AI SDK](https://sdk.vercel.ai/docs) - learn the SDK to build AI-powered user interfaces.
+1.  Run the database migrations:
 
+        npx prisma migrate dev
 
-## Deploy on Vercel
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    Note that the command being used is `npx` instead of `npm`.
 
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1.  Run the development server:
+
+        npm run dev
+
+You can open the app on `http://localhost:8000` using your browser.
