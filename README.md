@@ -8,9 +8,9 @@ This projects depends on some software and third-party services.
 
 1.  Make sure you already have Node.js and PostgreSQL installed on your machine.
 
-1.  Under the hood, this app will make requests to the [Chat Completions API](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), so you need to get your OpenAI API key.
+1.  Under the hood, this app will make requests to the [Chat Completions API](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), so you need to get your [OpenAI API key](https://platform.openai.com/docs/quickstart/step-2-setup-your-api-key).
 
-1.  Currently we are using Github and Google for authentication using OAuth, so you need to to get the OAuth client IDs and client secrets.
+1.  Currently we are using Github and Google for authentication using OAuth2. You need to to get the OAuth2 client ID and secret for [Github](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app) and [Google](https://developers.google.com/identity/protocols/oauth2).
 
 1.  You need to have an email server for sending emails e.g: SendGrid.
 
