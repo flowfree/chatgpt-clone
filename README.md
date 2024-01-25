@@ -2,7 +2,7 @@ ChatGPT Clone
 =============
 A ChatGPT clone built with [Next.js](https://nextjs.org/) and [Vercel AI SDK](https://sdk.vercel.ai/docs). 
 
-![Screenshot](http://localhost:4000/assets/img/chatgpt-clone.png)
+![Screenshot](https://www.nashruddinamin.com/assets/img/chatgpt-clone.png)
 
 
 ## Prerequisites
